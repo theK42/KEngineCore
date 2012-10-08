@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		943BDF071622A51B00B3AAB6 /* libLua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 943BDEAE1622864E00B3AAB6 /* libLua.a */; };
 		94AF472215F2E14E00250F3F /* Updater.h in Headers */ = {isa = PBXBuildFile; fileRef = 94AF472115F2E14E00250F3F /* Updater.h */; };
 		94F1A52D161FE5B5006758A5 /* LuaLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A524161FE5B5006758A5 /* LuaLibrary.cpp */; };
 		94F1A52E161FE5B5006758A5 /* LuaLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 94F1A525161FE5B5006758A5 /* LuaLibrary.h */; };
@@ -49,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				943BDF071622A51B00B3AAB6 /* libLua.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
