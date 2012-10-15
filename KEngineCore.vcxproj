@@ -41,7 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../Lua;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Lua;.</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -54,7 +54,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../Lua;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Lua;.</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -78,7 +78,7 @@
     <ClInclude Include="Updater.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lua\Lua.vcxproj">
+    <ProjectReference Include="Lua\Lua.vcxproj">
       <Project>{162d249d-152e-42ad-9d7c-fc40ca25705b}</Project>
     </ProjectReference>
   </ItemGroup>
