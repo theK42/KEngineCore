@@ -79,7 +79,10 @@ void KEngineCore::LuaScheduler::KillThread(ScheduledLuaThread * thread) {
 	thread->SetRegistryIndex(LUA_REFNIL);
 	luaL_unref(mMainState, LUA_REGISTRYINDEX, threadRef);
 
-	mRunningThreads.erase(thread->mPosition); //TODO:  Fix this probably
+	if (thread->mPosition != mRunningThreads.end()) {
+		mRunningThreads.erase(thread->mPosition);
+		thread->mPosition = mRunningThreads.end();
+	}
 	mAllThreads.erase(thread->mThreadState);
 }
 
@@ -245,7 +248,7 @@ KEngineCore::ScheduledLuaCallback KEngineCore::LuaScheduler::CreateCallback(lua_
 			lua_xmove(luaState, thread, 1); //move the function from the parent thread to the child
 
 			scheduledThread->Init(callbackChunk->mScheduler, thread);
-			//lua_pop(luaState, 1); //Pop the thread off the stack now that it's been wrapped
+			lua_pop(luaState, 1); //Pop the thread off the stack now that it's been wrapped
 			scheduledThread->SetRegistryIndex(luaL_ref(luaState, LUA_REGISTRYINDEX));  //This pops the wrapped thread and copies it to the registry as well
 			scheduledThread->Resume();
 		};
