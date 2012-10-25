@@ -4,6 +4,24 @@
 #include "boost/crc.hpp"
 
 
+KEngineCore::StringHash::StringHash()
+{
+#ifndef NDEBUG
+	string = nullptr;
+#endif
+	hash = 0;
+}
+
+
+KEngineCore::StringHash::StringHash(StringHash const & other)
+{
+#ifndef NDEBUG
+	string = other.string;
+#endif
+	hash = other.hash;
+}
+
+
 KEngineCore::StringHash::StringHash(char const * inString, unsigned int inHash)
 {
 #ifndef NDEBUG
