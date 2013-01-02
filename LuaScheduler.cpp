@@ -45,6 +45,7 @@ lua_State * KEngineCore::LuaScheduler::GetMainState() const  {
 void KEngineCore::LuaScheduler::ScheduleThread(ScheduledLuaThread * thread, bool running) {
 	assert(mMainState);
 	//Push the thread into the lua registry with its pointer as key
+	lua_checkstack(mMainState, 2);
 	lua_pushlightuserdata(mMainState, thread); // push the pointer to be the key
 	lua_pushthread(thread->mThreadState); // push the thread ... to itself
 	lua_xmove(thread->mThreadState, mMainState, 1); // move the thread to the main state
@@ -71,6 +72,7 @@ void KEngineCore::LuaScheduler::ResumeThread(ScheduledLuaThread * thread) {
 void KEngineCore::LuaScheduler::KillThread(ScheduledLuaThread * thread) {
 	assert(mMainState);
 	assert(thread->mScheduler == this);
+	lua_checkstack(mMainState, 2);
 	lua_pushlightuserdata(mMainState, thread);
 	lua_pushnil(mMainState);
 	lua_settable(mMainState, LUA_REGISTRYINDEX);
@@ -135,6 +137,7 @@ KEngineCore::ScheduledLuaThread * KEngineCore::LuaScheduler::GetScheduledThread(
 static int create(lua_State * luaState) {
 	KEngineCore::LuaScheduler * scheduler = (KEngineCore::LuaScheduler *)lua_touserdata(luaState, lua_upvalueindex(1));
 	KEngineCore::ScheduledLuaThread * scheduledThread = new (lua_newuserdata(luaState, sizeof(KEngineCore::ScheduledLuaThread))) KEngineCore::ScheduledLuaThread;
+	lua_checkstack(luaState, 1);
 	luaL_getmetatable(luaState, "KEngineCore.ScheduledThread");
 	lua_setmetatable(luaState, -2);
 	
@@ -143,10 +146,12 @@ static int create(lua_State * luaState) {
 		int val = luaL_loadfile(luaState, scriptPath); //TODO: Check return value
 	} else {
 		luaL_checktype(luaState, 1, LUA_TFUNCTION);
+		lua_checkstack(luaState, 1);
 		lua_pushvalue(luaState, 1);
 	}
 			
-	lua_State * thread = lua_newthread(luaState);
+	lua_State * thread = lua_newthread(luaState);	
+	lua_checkstack(luaState, 1);
 	lua_xmove(luaState, scheduledThread->GetThreadState(), 1); //move the function from the parent thread to the child
 	scheduledThread->Init(scheduler, thread);
 
@@ -190,6 +195,7 @@ static const struct luaL_Reg schedulerLibrary [] = {
 };
 
 static int luaopen_scheduler (lua_State * luaState) {
+	lua_checkstack(luaState, 2);
 	luaL_newlibtable(luaState, schedulerLibrary);
 	lua_pushvalue(luaState, lua_upvalueindex(1));
 	luaL_setfuncs(luaState, schedulerLibrary, 1);
@@ -199,13 +205,15 @@ static int luaopen_scheduler (lua_State * luaState) {
 
 void KEngineCore::LuaScheduler::RegisterLibrary(lua_State * luaState, char const * name) {
 	PreloadLibrary(luaState, name, luaopen_scheduler);
-
+	
+	lua_checkstack(luaState, 3);
 	luaL_newmetatable(luaState, "KEngineCore.ScheduledThread");
 	lua_pushstring(luaState, "__gc");
 	lua_pushcfunction(luaState, deleteScheduledThread);
 	lua_settable(luaState, -3);
 	lua_pop(luaState, 1);
 	
+	lua_checkstack(luaState, 1);
 	luaL_newmetatable(luaState, "KEngineCore.Callbackything");
 	lua_pop(luaState, 1);
 }
