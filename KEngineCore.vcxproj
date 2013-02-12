@@ -72,11 +72,13 @@
   <ItemGroup>
     <ClCompile Include="LuaLibrary.cpp" />
     <ClCompile Include="LuaScheduler.cpp" />
+    <ClCompile Include="FastMath.cpp" />
     <ClCompile Include="StringHash.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Updater.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FastMath.h" />
     <ClInclude Include="LuaLibrary.h" />
     <ClInclude Include="LuaScheduler.h" />
     <ClInclude Include="StringHash.h" />
