@@ -112,7 +112,8 @@ void KEngineCore::LuaScheduler::Update() {
 		ScheduledLuaThread * thread = *it;
 		lua_State * threadState = thread->mThreadState;
 
-		int scriptResult = lua_resume(threadState, nullptr, 0);
+		int scriptResult = lua_resume(threadState, nullptr, thread->mReturnValues);
+		thread->mReturnValues = 0;
 		if (scriptResult != LUA_YIELD) {
 			deadThreads.push_back(thread);
 			if (scriptResult != 0) {
@@ -244,7 +245,7 @@ KEngineCore::ScheduledLuaCallback KEngineCore::LuaScheduler::CreateCallback(lua_
 	
 	
 		
-	std::function<void ()> cb = [callbackChunk] () {
+	auto cb = [callbackChunk] () {
 			lua_State * luaState = callbackChunk->mScheduler->GetMainState();
 			KEngineCore::ScheduledLuaThread * scheduledThread = new (lua_newuserdata(luaState, sizeof(KEngineCore::ScheduledLuaThread))) KEngineCore::ScheduledLuaThread;
 			luaL_getmetatable(luaState, "KEngineCore.ScheduledThread");
@@ -261,7 +262,7 @@ KEngineCore::ScheduledLuaCallback KEngineCore::LuaScheduler::CreateCallback(lua_
 			scheduledThread->Resume();
 		};
 
-	std::function<void ()> cancel = [callbackChunk] () {
+	auto cancel = [callbackChunk] () {
 			lua_State * luaState = callbackChunk->mScheduler->GetMainState();
 			luaL_unref(luaState, LUA_REGISTRYINDEX, callbackChunk->mFunctionRegistryIndex); // drop the function reference
 			luaL_unref(luaState, LUA_REGISTRYINDEX, callbackChunk->mSelfRegistryIndex); // drop the chunk reference
@@ -279,6 +280,7 @@ KEngineCore::ScheduledLuaThread::ScheduledLuaThread()
 	mScheduler = nullptr;
 	mThreadState = nullptr;
 	mRegistryIndex = LUA_REFNIL;
+	mReturnValues = 0;
 }
 
 KEngineCore::ScheduledLuaThread::~ScheduledLuaThread()
@@ -339,9 +341,10 @@ void KEngineCore::ScheduledLuaThread::Pause()
 	mScheduler->PauseThread(this);
 }
 
-void KEngineCore::ScheduledLuaThread::Resume()
+void KEngineCore::ScheduledLuaThread::Resume(int returnValues)
 {
 	assert(mScheduler != nullptr);
+	mReturnValues = returnValues;
 	mScheduler->ResumeThread(this);
 }
 
@@ -358,6 +361,7 @@ void KEngineCore::ScheduledLuaThread::SetRegistryIndex(int registryIndex)
 
 int KEngineCore::ScheduledLuaThread::GetRegistryIndex() const
 {
+	assert(mScheduler != nullptr);
 	return mRegistryIndex;
 }
 
@@ -365,4 +369,10 @@ lua_State * KEngineCore::ScheduledLuaThread::GetThreadState() const
 {
 	assert(mScheduler != nullptr);
 	return mThreadState;
+}
+
+KEngineCore::LuaScheduler * KEngineCore::ScheduledLuaThread::GetLuaScheduler() const
+{
+	assert(mScheduler != nullptr);
+	return mScheduler;
 }
