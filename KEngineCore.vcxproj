@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FastMath.h" />
+    <ClInclude Include="List.h" />
     <ClInclude Include="LuaLibrary.h" />
     <ClInclude Include="LuaScheduler.h" />
     <ClInclude Include="StringHash.h" />

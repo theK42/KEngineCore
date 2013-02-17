@@ -23,7 +23,7 @@ void KEngineCore::LuaScheduler::Init() {
 }
 
 void KEngineCore::LuaScheduler::Deinit() {
-	mRunningThreads.clear();
+	mRunningThreads.Clear();
 	std::vector<ScheduledLuaThread *> deadThreads;
 	for (auto iterator = mAllThreads.begin(); iterator != mAllThreads.end(); iterator++) {
 		deadThreads.push_back(iterator->second);
@@ -51,7 +51,7 @@ void KEngineCore::LuaScheduler::ScheduleThread(ScheduledLuaThread * thread, bool
 	lua_xmove(thread->mThreadState, mMainState, 1); // move the thread to the main state
 	lua_settable(mMainState, LUA_REGISTRYINDEX); // registry[&thread] = thread->mThreadState;
 	if (running) {
-		mResumingThreads.push_back(thread);
+		mResumingThreads.PushBack(thread);
 	}
 	mAllThreads[thread->mThreadState] = thread;
 }
@@ -60,13 +60,13 @@ void KEngineCore::LuaScheduler::ScheduleThread(ScheduledLuaThread * thread, bool
 void KEngineCore::LuaScheduler::PauseThread(ScheduledLuaThread * thread) {
 	assert(mMainState);
 	assert(thread->mScheduler == this);
-	mPausingThreads.push_back(thread);
+	mPausingThreads.PushBack(thread);
 }
 
 void KEngineCore::LuaScheduler::ResumeThread(ScheduledLuaThread * thread) {
 	assert(mMainState);
 	assert(thread->mScheduler == this);
-	mResumingThreads.push_back(thread);
+	mResumingThreads.PushBack(thread);
 }
 
 void KEngineCore::LuaScheduler::KillThread(ScheduledLuaThread * thread) {
@@ -81,41 +81,34 @@ void KEngineCore::LuaScheduler::KillThread(ScheduledLuaThread * thread) {
 	thread->SetRegistryIndex(LUA_REFNIL);
 	luaL_unref(mMainState, LUA_REGISTRYINDEX, threadRef);
 
-	if (thread->mPosition != mRunningThreads.end()) {
-		mRunningThreads.erase(thread->mPosition);
-		thread->mPosition = mRunningThreads.end();
-	}
+	mRunningThreads.Remove(thread);
+	
 	mAllThreads.erase(thread->mThreadState);
 }
 
 void KEngineCore::LuaScheduler::Update() {
 	std::vector<ScheduledLuaThread *> deadThreads;
 
-	for (auto it = mPausingThreads.begin(); it != mPausingThreads.end(); it++)
+	for (ScheduledLuaThread & thread : mPausingThreads)
 	{
-		ScheduledLuaThread *thread = *it;
-		mRunningThreads.erase(thread->mPosition);
-		thread->mPosition = mRunningThreads.end();
+		mRunningThreads.Remove(&thread);
 	}	
-	mPausingThreads.clear();
-
-	for (auto it = mResumingThreads.begin(); it != mResumingThreads.end(); it++)
+	mPausingThreads.Clear();
+	
+	for (ScheduledLuaThread & thread : mResumingThreads)
 	{
-		ScheduledLuaThread *thread = *it;
-		mRunningThreads.push_front(*it);
-		thread->mPosition = mRunningThreads.begin();
+		mRunningThreads.PushFront(&thread);
 	}
-	mResumingThreads.clear();
-
-	for (auto it = mRunningThreads.begin(); it != mRunningThreads.end(); it++)
+	mResumingThreads.Clear();
+	
+	for (ScheduledLuaThread & thread : mRunningThreads)
 	{
-		ScheduledLuaThread * thread = *it;
-		lua_State * threadState = thread->mThreadState;
+		lua_State * threadState = thread.mThreadState;
 
-		int scriptResult = lua_resume(threadState, nullptr, thread->mReturnValues);
-		thread->mReturnValues = 0;
+		int scriptResult = lua_resume(threadState, nullptr, thread.mReturnValues);
+		thread.mReturnValues = 0;
 		if (scriptResult != LUA_YIELD) {
-			deadThreads.push_back(thread);
+			deadThreads.push_back(&thread);
 			if (scriptResult != 0) {
 				char const * string = lua_tostring(threadState, -1);
 				fprintf(stderr, "%s", string);
@@ -124,7 +117,7 @@ void KEngineCore::LuaScheduler::Update() {
 			}
 		}
 	}
-
+	
 	for (auto it = deadThreads.begin(); it != deadThreads.end(); it++) {
 		KillThread(*it);
 	}

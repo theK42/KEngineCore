@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include <functional>
+#include "List.h"
 #include "LuaLibrary.h"
 
 struct lua_State;
@@ -42,15 +43,15 @@ public:
 private:
 	void ScheduleThread(ScheduledLuaThread * thread, bool running);
 	lua_State *	mMainState;
-	std::vector<ScheduledLuaThread *>			mResumingThreads;
-	std::vector<ScheduledLuaThread *>			mPausingThreads;
-	std::list<ScheduledLuaThread *>				mRunningThreads;
+	List<ScheduledLuaThread, 0, 3>				mRunningThreads;
+	List<ScheduledLuaThread, 1, 3>				mPausingThreads;
+	List<ScheduledLuaThread, 2, 3>				mResumingThreads;
 	std::map<lua_State *, ScheduledLuaThread *>	mAllThreads;
 
 	friend class ScheduledLuaThread;
 };
 
-class ScheduledLuaThread
+class ScheduledLuaThread : public ListElement<ScheduledLuaThread, 3>
 {
 public:
 	ScheduledLuaThread();
@@ -73,7 +74,6 @@ private:
 
 	LuaScheduler *								mScheduler;
 	lua_State *									mThreadState;
-	std::list<ScheduledLuaThread *>::iterator	mPosition;
 	int											mRegistryIndex;
 	int											mReturnValues;
 
