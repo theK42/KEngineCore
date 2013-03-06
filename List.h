@@ -97,18 +97,45 @@ namespace KEngineCore
 		class iterator {
 		public:
 			iterator(ListElement<T,N> * element) { mElement = element; }
-			T & operator*() { return static_cast<T &>(reinterpret_cast<ListElement <T, N> &>(mElement)); }
-			iterator & operator++() { mElement = mElement->GetNext<M>(); return *this; }
-			bool operator!=(iterator const & other) { return mElement != other.mElement; }
+			T * operator*();
+			iterator & operator++();
+			bool operator!=(iterator const & other);
 		private:
 			ListElement<T, N> * mElement; 
 		};
-
-		iterator		begin() { return iterator(mHead.GetNext<M>()); }
-		iterator	 	end() { return iterator(&mHead); }
+		
+		iterator		begin();
+		iterator	 	end();
 	private:
 		ListElement<T, N>	mHead;
 	};
+
+	template <typename T, int M, int N>
+	typename List<T, M, N>::iterator List<T, M, N>::begin() {
+		return iterator(mHead.GetNext<M>());
+	}
+	
+	template <typename T, int M, int N>
+	typename List<T, M, N>::iterator List<T, M, N>::end() {
+		return iterator(&mHead);
+	}
+
+	template <typename T, int M, int N>
+	bool typename List<T, M, N>::iterator::operator!=(iterator const & other) {
+		return mElement != other.mElement;
+	}
+
+	
+	template <typename T, int M, int N>
+	typename List<T, M, N>::iterator & List<T, M, N>::iterator::operator++() {
+		mElement = mElement->GetNext<M>(); 
+		return *this;
+	}	
+	
+	template <typename T, int M, int N>
+	T * List<T, M, N>::iterator::operator*() {
+		return static_cast<T *>(mElement);
+	}
 
 	///------------------------------------------------------------------------
 
@@ -232,4 +259,4 @@ namespace KEngineCore
 	///------------------------------------------------------------------------
 	///------------------------------------------------------------------------
 
-} /// namespace XEngine
+;} /// namespace XEngine

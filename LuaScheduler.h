@@ -40,6 +40,7 @@ public:
 
 	ScheduledLuaThread * GetScheduledThread(lua_State * thread);
 
+	void LoadScript(lua_State * thread, char const * scriptPath);
 private:
 	void ScheduleThread(ScheduledLuaThread * thread, bool running);
 	lua_State *	mMainState;
@@ -47,7 +48,7 @@ private:
 	List<ScheduledLuaThread, 1, 3>				mPausingThreads;
 	List<ScheduledLuaThread, 2, 3>				mResumingThreads;
 	std::map<lua_State *, ScheduledLuaThread *>	mAllThreads;
-
+	int											mScriptTableRegistryIndex;
 	friend class ScheduledLuaThread;
 };
 
@@ -71,6 +72,7 @@ public:
 
 	lua_State * GetThreadState() const;
 private:
+
 
 	LuaScheduler *								mScheduler;
 	lua_State *									mThreadState;
