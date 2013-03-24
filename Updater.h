@@ -14,7 +14,7 @@ namespace KEngineCore {
 	///------------------------------------------------------------------------
 
 	template <class TClass>
-	class Updating
+	class Updating : public TClass
 	{
 	public:
 		Updating();
@@ -24,10 +24,6 @@ namespace KEngineCore {
 
 		void Start();
 		void Stop();
-
-		///Gets the internal updatable object
-		TClass & Get();
-
 	protected:
 		///Init is protected because most template instances will need to override it with more parameters.
 		void Init(Updater<TClass> * updater);
@@ -35,7 +31,6 @@ namespace KEngineCore {
 		///Only the associated Updater should call Update
 		void Update(double time);
 
-		TClass				mUpdatable;
         Updater<TClass> *	mUpdater {nullptr};
         bool				mUpdating {false};
 
@@ -111,17 +106,10 @@ namespace KEngineCore {
 	{
 		assert(mUpdater != nullptr); ///Initialized
 		assert(mUpdating);
-		mUpdatable.Update(fTime);
+		TClass::Update(fTime);
 	}
 
-	///------------------------------------------------------------------------
-
-	template <class TClass>
-	TClass & Updating<TClass>::Get()
-	{
-		return mUpdatable;
-	}
-
+	
 	///------------------------------------------------------------------------
 	///------------------------------------------------------------------------
 
