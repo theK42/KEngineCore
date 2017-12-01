@@ -1,5 +1,6 @@
 #include "LuaScheduler.h"
 #include "Lua/lua.hpp"
+#include "TextFile.h"
 #include <assert.h>
 #include <vector>
 
@@ -135,9 +136,11 @@ static int create(lua_State * luaState) {
 	luaL_getmetatable(luaState, "KEngineCore.ScheduledThread");
 	lua_setmetatable(luaState, -2);
 	
-	char const * scriptPath = luaL_optstring(luaState, 1, nullptr);
-	if (scriptPath != nullptr) {
-		int val = luaL_loadfile(luaState, scriptPath); //TODO: Check return value
+	char const * fileName = luaL_optstring(luaState, 1, nullptr);
+	if (fileName != nullptr) {
+        KEngineCore::TextFile file;
+        file.LoadFromFile(fileName, ".lua");
+		int val = luaL_loadbuffer(luaState, file.GetContents().c_str(), file.GetContents().length(), fileName); //TODO: Check return value
 	} else {
 		luaL_checktype(luaState, 1, LUA_TFUNCTION);
 		lua_pushvalue(luaState, 1);
@@ -283,11 +286,14 @@ void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, lua_State *
 	scheduler->ScheduleThread(this, run);
 }
 
-void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, char const * scriptPath, bool run)
+void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, char const * fileName, bool run)
 {
 	lua_State * mainState = scheduler->GetMainState();
 	lua_State * thread = lua_newthread(mainState);
-	int val = luaL_loadfile(thread, scriptPath);  //TODO Check return value
+    
+    KEngineCore::TextFile file;
+    file.LoadFromFile(fileName, ".lua");
+    int val = luaL_loadbuffer(thread, file.GetContents().c_str(), file.GetContents().length(), fileName); //TODO: Check return value
 	char const * string;
 	switch (val) {
 		case LUA_ERRSYNTAX: ///syntax error during pre-compilation;

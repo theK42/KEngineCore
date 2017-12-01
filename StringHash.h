@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 
 namespace KEngineCore {
 struct StringHash
@@ -20,3 +21,15 @@ struct StringHash
 #endif
 
 #define HASH_CONST(string, hash) hash
+
+namespace std
+{
+    template <>
+    struct hash<KEngineCore::StringHash>
+    {
+        size_t operator()(const KEngineCore::StringHash& s) const
+        {
+            return s.hash;
+        }
+    };
+}
