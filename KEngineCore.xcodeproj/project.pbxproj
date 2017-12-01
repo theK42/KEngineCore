@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6851561E1FC905A7003788B5 /* LuaLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A524161FE5B5006758A5 /* LuaLibrary.cpp */; };
+		6851561F1FC905A7003788B5 /* LuaScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A526161FE5B5006758A5 /* LuaScheduler.cpp */; };
+		685156201FC905A7003788B5 /* StringHash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A528161FE5B5006758A5 /* StringHash.cpp */; };
+		685156211FC905A7003788B5 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A52A161FE5B5006758A5 /* Timer.cpp */; };
+		685156221FC905A7003788B5 /* Updater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A52C161FE5B5006758A5 /* Updater.cpp */; };
+		685156261FC905A7003788B5 /* Updater.h in Headers */ = {isa = PBXBuildFile; fileRef = 94AF472115F2E14E00250F3F /* Updater.h */; };
+		685156271FC905A7003788B5 /* LuaLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 94F1A525161FE5B5006758A5 /* LuaLibrary.h */; };
+		685156281FC905A7003788B5 /* LuaScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = 94F1A527161FE5B5006758A5 /* LuaScheduler.h */; };
+		685156291FC905A7003788B5 /* StringHash.h in Headers */ = {isa = PBXBuildFile; fileRef = 94F1A529161FE5B5006758A5 /* StringHash.h */; };
+		6851562A1FC905A7003788B5 /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 94F1A52B161FE5B5006758A5 /* Timer.h */; };
+		685156331FC905E3003788B5 /* libLua_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6851561B1FC905A4003788B5 /* libLua_iOS.a */; };
+		6851568B1FCBB929003788B5 /* TextFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6851568A1FCBB929003788B5 /* TextFile.mm */; };
+		6851568C1FCBB92C003788B5 /* TextFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6851568A1FCBB929003788B5 /* TextFile.mm */; };
 		943BDF071622A51B00B3AAB6 /* libLua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 943BDEAE1622864E00B3AAB6 /* libLua.a */; };
 		94AF472215F2E14E00250F3F /* Updater.h in Headers */ = {isa = PBXBuildFile; fileRef = 94AF472115F2E14E00250F3F /* Updater.h */; };
 		94F1A52D161FE5B5006758A5 /* LuaLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A524161FE5B5006758A5 /* LuaLibrary.cpp */; };
@@ -21,6 +34,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6851561A1FC905A4003788B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 943BDEA61622864D00B3AAB6 /* Lua.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 685156171FC90568003788B5;
+			remoteInfo = Lua_iOS;
+		};
+		6851562F1FC905BD003788B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 943BDEA61622864D00B3AAB6 /* Lua.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 685155D51FC90568003788B5;
+			remoteInfo = Lua_iOS;
+		};
+		685156341FC905EC003788B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 943BDEA61622864D00B3AAB6 /* Lua.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 94F1A57D161FF887006758A5;
+			remoteInfo = Lua_Mac;
+		};
 		943BDEAD1622864E00B3AAB6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 943BDEA61622864D00B3AAB6 /* Lua.xcodeproj */;
@@ -31,8 +65,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6851562E1FC905A7003788B5 /* libKEngineCore_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKEngineCore_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		685156891FCBB5E5003788B5 /* TextFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextFile.h; sourceTree = "<group>"; };
+		6851568A1FCBB929003788B5 /* TextFile.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TextFile.mm; sourceTree = "<group>"; };
 		943BDEA61622864D00B3AAB6 /* Lua.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Lua.xcodeproj; path = Lua/Lua.xcodeproj; sourceTree = "<group>"; };
-		94AF46FC15F2E0B000250F3F /* libKEngineCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKEngineCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		94AF46FC15F2E0B000250F3F /* libKEngineCore_Mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKEngineCore_Mac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		94AF472115F2E14E00250F3F /* Updater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Updater.h; sourceTree = "<group>"; };
 		94F1A524161FE5B5006758A5 /* LuaLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaLibrary.cpp; sourceTree = "<group>"; };
 		94F1A525161FE5B5006758A5 /* LuaLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaLibrary.h; sourceTree = "<group>"; };
@@ -46,6 +83,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		685156231FC905A7003788B5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				685156331FC905E3003788B5 /* libLua_iOS.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		94AF46F915F2E0B000250F3F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -57,10 +102,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		685156311FC905D3003788B5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		943BDEA71622864D00B3AAB6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				943BDEAE1622864E00B3AAB6 /* libLua.a */,
+				6851561B1FC905A4003788B5 /* libLua_iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -75,18 +128,22 @@
 				94F1A527161FE5B5006758A5 /* LuaScheduler.h */,
 				94F1A528161FE5B5006758A5 /* StringHash.cpp */,
 				94F1A529161FE5B5006758A5 /* StringHash.h */,
+				685156891FCBB5E5003788B5 /* TextFile.h */,
+				6851568A1FCBB929003788B5 /* TextFile.mm */,
 				94F1A52A161FE5B5006758A5 /* Timer.cpp */,
 				94F1A52B161FE5B5006758A5 /* Timer.h */,
 				94F1A52C161FE5B5006758A5 /* Updater.cpp */,
 				94AF472115F2E14E00250F3F /* Updater.h */,
 				94AF46FD15F2E0B000250F3F /* Products */,
+				685156311FC905D3003788B5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		94AF46FD15F2E0B000250F3F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				94AF46FC15F2E0B000250F3F /* libKEngineCore.a */,
+				94AF46FC15F2E0B000250F3F /* libKEngineCore_Mac.a */,
+				6851562E1FC905A7003788B5 /* libKEngineCore_iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -94,6 +151,18 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		685156251FC905A7003788B5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				685156261FC905A7003788B5 /* Updater.h in Headers */,
+				685156271FC905A7003788B5 /* LuaLibrary.h in Headers */,
+				685156281FC905A7003788B5 /* LuaScheduler.h in Headers */,
+				685156291FC905A7003788B5 /* StringHash.h in Headers */,
+				6851562A1FC905A7003788B5 /* Timer.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		94AF46FA15F2E0B000250F3F /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -109,9 +178,27 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		94AF46FB15F2E0B000250F3F /* KEngineCore */ = {
+		6851561C1FC905A7003788B5 /* KEngineCore_iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 94AF470015F2E0B000250F3F /* Build configuration list for PBXNativeTarget "KEngineCore" */;
+			buildConfigurationList = 6851562B1FC905A7003788B5 /* Build configuration list for PBXNativeTarget "KEngineCore_iOS" */;
+			buildPhases = (
+				6851561D1FC905A7003788B5 /* Sources */,
+				685156231FC905A7003788B5 /* Frameworks */,
+				685156251FC905A7003788B5 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				685156301FC905BD003788B5 /* PBXTargetDependency */,
+			);
+			name = KEngineCore_iOS;
+			productName = KEngineCore;
+			productReference = 6851562E1FC905A7003788B5 /* libKEngineCore_iOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		94AF46FB15F2E0B000250F3F /* KEngineCore_Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 94AF470015F2E0B000250F3F /* Build configuration list for PBXNativeTarget "KEngineCore_Mac" */;
 			buildPhases = (
 				94AF46F815F2E0B000250F3F /* Sources */,
 				94AF46F915F2E0B000250F3F /* Frameworks */,
@@ -120,10 +207,11 @@
 			buildRules = (
 			);
 			dependencies = (
+				685156351FC905EC003788B5 /* PBXTargetDependency */,
 			);
-			name = KEngineCore;
+			name = KEngineCore_Mac;
 			productName = KEngineCore;
-			productReference = 94AF46FC15F2E0B000250F3F /* libKEngineCore.a */;
+			productReference = 94AF46FC15F2E0B000250F3F /* libKEngineCore_Mac.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -132,7 +220,7 @@
 		94AF46F315F2E0B000250F3F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0910;
 			};
 			buildConfigurationList = 94AF46F615F2E0B000250F3F /* Build configuration list for PBXProject "KEngineCore" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -152,12 +240,20 @@
 			);
 			projectRoot = "";
 			targets = (
-				94AF46FB15F2E0B000250F3F /* KEngineCore */,
+				94AF46FB15F2E0B000250F3F /* KEngineCore_Mac */,
+				6851561C1FC905A7003788B5 /* KEngineCore_iOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		6851561B1FC905A4003788B5 /* libLua_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLua_iOS.a;
+			remoteRef = 6851561A1FC905A4003788B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		943BDEAE1622864E00B3AAB6 /* libLua.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -168,10 +264,24 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6851561D1FC905A7003788B5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6851568C1FCBB92C003788B5 /* TextFile.mm in Sources */,
+				6851561E1FC905A7003788B5 /* LuaLibrary.cpp in Sources */,
+				6851561F1FC905A7003788B5 /* LuaScheduler.cpp in Sources */,
+				685156201FC905A7003788B5 /* StringHash.cpp in Sources */,
+				685156211FC905A7003788B5 /* Timer.cpp in Sources */,
+				685156221FC905A7003788B5 /* Updater.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		94AF46F815F2E0B000250F3F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6851568B1FCBB929003788B5 /* TextFile.mm in Sources */,
 				94F1A52D161FE5B5006758A5 /* LuaLibrary.cpp in Sources */,
 				94F1A52F161FE5B5006758A5 /* LuaScheduler.cpp in Sources */,
 				94F1A531161FE5B5006758A5 /* StringHash.cpp in Sources */,
@@ -182,16 +292,76 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		685156301FC905BD003788B5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Lua_iOS;
+			targetProxy = 6851562F1FC905BD003788B5 /* PBXContainerItemProxy */;
+		};
+		685156351FC905EC003788B5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Lua_Mac;
+			targetProxy = 685156341FC905EC003788B5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		6851562C1FC905A7003788B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = .;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+			};
+			name = Debug;
+		};
+		6851562D1FC905A7003788B5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = .;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+			};
+			name = Release;
+		};
 		94AF46FE15F2E0B000250F3F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -202,6 +372,9 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
@@ -213,15 +386,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx;
@@ -257,6 +449,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6851562B1FC905A7003788B5 /* Build configuration list for PBXNativeTarget "KEngineCore_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6851562C1FC905A7003788B5 /* Debug */,
+				6851562D1FC905A7003788B5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		94AF46F615F2E0B000250F3F /* Build configuration list for PBXProject "KEngineCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -266,7 +467,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		94AF470015F2E0B000250F3F /* Build configuration list for PBXNativeTarget "KEngineCore" */ = {
+		94AF470015F2E0B000250F3F /* Build configuration list for PBXNativeTarget "KEngineCore_Mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				94AF470115F2E0B000250F3F /* Debug */,
