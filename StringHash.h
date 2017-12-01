@@ -4,6 +4,8 @@
 namespace KEngineCore {
 struct StringHash
 {
+	StringHash();
+	StringHash(StringHash const & other);
 	StringHash(char const * string, unsigned int hash);
 	StringHash(char const * string);
 	unsigned int hash;
