@@ -61,11 +61,12 @@ public:
 	void Deinit();
 	
 	void Pause();
-	void Resume();
+	void Resume(int returnValues = 0);
 	void Kill();
 	
 	void SetRegistryIndex(int registryIndex);
 	int GetRegistryIndex() const;
+	LuaScheduler * GetLuaScheduler() const;
 
 	lua_State * GetThreadState() const;
 private:
@@ -73,7 +74,8 @@ private:
     LuaScheduler *								mScheduler {nullptr};
     lua_State *									mThreadState {nullptr};
 	std::list<ScheduledLuaThread *>::iterator	mPosition;
-    int											mRegistryIndex {-1};
+	int											mRegistryIndex {-1};
+	int											mReturnValues {-1};
 
 	friend class LuaScheduler;
 };

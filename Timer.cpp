@@ -151,10 +151,12 @@ static const struct luaL_Reg timerLibrary [] = {
 };
 
 static int luaopen_timer (lua_State * luaState) {
+	lua_checkstack(luaState, 2);
 	luaL_newlibtable(luaState, timerLibrary);
 	lua_pushvalue(luaState, lua_upvalueindex(1));
 	luaL_setfuncs(luaState, timerLibrary, 1);
-
+	
+	lua_checkstack(luaState, 3);
 	luaL_newmetatable(luaState, "KEngineCore.Timeout");
 	lua_pushstring(luaState, "__gc");
 	lua_pushcfunction(luaState, deleteTimeout);
