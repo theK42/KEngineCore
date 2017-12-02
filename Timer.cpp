@@ -27,8 +27,9 @@ void KEngineCore::Timer::Deinit()
 
 void KEngineCore::Timer::Update(double time)
 {
+    constexpr int millisecondsPerSecond = 1000;
 	mCurrentTime += time;
-	int currentTime = (int)(mCurrentTime * 1000);
+	int currentTime = (int)(mCurrentTime * millisecondsPerSecond);
 	
 	std::vector<Timeout *>	elapsedTimeouts;
 
@@ -37,7 +38,7 @@ void KEngineCore::Timer::Update(double time)
 		if (mProcessingTimeout->mFiresAt <= currentTime) {
 			mProcessingTimeout->TimeElapsed();
 			if (mProcessingTimeout->mRepeats) {
-				mProcessingTimeout->mFiresAt += (int)(1000 * mProcessingTimeout->mSetTime);
+				mProcessingTimeout->mFiresAt += (int)(millisecondsPerSecond * mProcessingTimeout->mSetTime);
 			} else {
 				elapsedTimeouts.push_back(mProcessingTimeout);
 			}

@@ -13,8 +13,8 @@ namespace KEngineCore {
 class ScheduledLuaThread;
 
 struct ScheduledLuaCallback {
-	std::function<void ()> mCallback;
-	std::function<void ()> mCancelCallback;
+    std::function<void ()> mCallback;
+    std::function<void ()> mCancelCallback;
 };
 
 class LuaScheduler : protected LuaLibrary
@@ -41,7 +41,7 @@ public:
 
 private:
 	void ScheduleThread(ScheduledLuaThread * thread, bool running);
-	lua_State *	mMainState;
+    lua_State *	mMainState {nullptr};
 	std::vector<ScheduledLuaThread *>			mResumingThreads;
 	std::vector<ScheduledLuaThread *>			mPausingThreads;
 	std::list<ScheduledLuaThread *>				mRunningThreads;
@@ -70,10 +70,10 @@ public:
 	lua_State * GetThreadState() const;
 private:
 
-	LuaScheduler *								mScheduler;
-	lua_State *									mThreadState;
+    LuaScheduler *								mScheduler {nullptr};
+    lua_State *									mThreadState {nullptr};
 	std::list<ScheduledLuaThread *>::iterator	mPosition;
-	int											mRegistryIndex;
+    int											mRegistryIndex {-1};
 
 	friend class LuaScheduler;
 };

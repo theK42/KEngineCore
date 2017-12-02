@@ -28,10 +28,10 @@ private:
 	void AddTimeout(Timeout * timeout);
 	void ClearTimeout(Timeout * handler);
 
-	LuaScheduler *			mScheduler;
+    LuaScheduler *			mScheduler {nullptr};
 	std::list<Timeout *>	mTimeouts;
-	double					mCurrentTime;
-	Timeout *				mProcessingTimeout;
+    double					mCurrentTime {0.0};
+    Timeout *				mProcessingTimeout {nullptr};
 	friend class Timeout;
 };
 
@@ -49,12 +49,12 @@ public:
 
 private:
 	Timer *							mTimer;
-	double							mSetTime;
-	int								mFiresAt;
-	bool							mRepeats;
+    double							mSetTime {0.0};
+    int								mFiresAt {0};
+    bool							mRepeats {false};
 	std::list<Timeout *>::iterator	mPosition;
-	std::function<void()>			mCallback;
-	std::function<void()>			mCancelCallback;
+    std::function<void()>			mCallback {nullptr};
+    std::function<void()>			mCancelCallback {nullptr};
 	friend class Timer;
 };
 

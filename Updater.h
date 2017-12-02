@@ -1,7 +1,7 @@
 #pragma once
 #pragma once
 
-#include <list>
+#include <vector>
 #include <cassert>
 
 
@@ -36,8 +36,8 @@ namespace KEngineCore {
 		void Update(double time);
 
 		TClass				mUpdatable;
-		Updater<TClass> *	mUpdater;
-		bool				mUpdating;
+        Updater<TClass> *	mUpdater {nullptr};
+        bool				mUpdating {false};
 
 		friend class Updater<TClass>;
 	};
@@ -47,7 +47,7 @@ namespace KEngineCore {
 	template <class TClass>
 	Updating<TClass>::Updating()
 	{
-		mUpdater = 0;
+		mUpdater = nullptr;
 		mUpdating = false;
 	}
 
@@ -64,8 +64,8 @@ namespace KEngineCore {
 	template <class TClass>
 	void Updating<TClass>::Init( Updater<TClass> * updater )
 	{
-		assert(updater != 0);
-		assert(mUpdater == 0);  ///Don't allow double initialization
+		assert(updater != nullptr);
+		assert(mUpdater == nullptr);  ///Don't allow double initialization
 		mUpdater = updater;
 	}
 
@@ -75,7 +75,7 @@ namespace KEngineCore {
 	void Updating<TClass>::Deinit()
 	{
 		Stop();
-		mUpdater = 0;
+		mUpdater = nullptr;
 	}
 
 	///------------------------------------------------------------------------
@@ -83,7 +83,7 @@ namespace KEngineCore {
 	template <class TClass>
 	void Updating<TClass>::Start()
 	{
-		assert(mUpdater != 0); ///Initialized
+		assert(mUpdater != nullptr); ///Initialized
 		if (!mUpdating)
 		{
 			mUpdater->AddToUpdateList(this);
@@ -96,7 +96,7 @@ namespace KEngineCore {
 	template <class TClass>
 	void Updating<TClass>::Stop()
 	{
-		assert(mUpdater != 0); ///Initialized
+		assert(mUpdater != nullptr); ///Initialized
 		if (mUpdating)
 		{
 			mUpdater->RemoveFromUpdateList(this);
@@ -109,7 +109,7 @@ namespace KEngineCore {
 	template <class TClass>
 	void Updating<TClass>::Update( double fTime )
 	{
-		assert(mUpdater != 0); ///Initialized
+		assert(mUpdater != nullptr); ///Initialized
 		assert(mUpdating);
 		mUpdatable.Update(fTime);
 	}
@@ -141,7 +141,7 @@ namespace KEngineCore {
 		void AddToUpdateList(Updating<TClass> * updatable);
 		void RemoveFromUpdateList(Updating<TClass> * updatable);
 
-		std::list<Updating<TClass> *>	mUpdateList;
+		std::vector<Updating<TClass> *>	mUpdateList;
 		bool							mInitialized;
 
 		friend class Updating<TClass>;
@@ -192,10 +192,10 @@ namespace KEngineCore {
 	void Updater<TClass>::Update(double fTime)
 	{
 		assert(mInitialized);
-		for (typename std::list<Updating<TClass> *>::iterator it = mUpdateList.begin(); it != mUpdateList.end(); it++)
-		{
-			(*it)->Update(fTime);
-		}
+        for (auto * updateable: mUpdateList)
+        {
+            updateable->Update(fTime);
+        }
 	}
 
 	///------------------------------------------------------------------------
@@ -213,7 +213,7 @@ namespace KEngineCore {
 	void Updater<TClass>::RemoveFromUpdateList( Updating<TClass> * updatable )
 	{
 		assert(mInitialized);
-		mUpdateList.remove(updatable);
+        mUpdateList.erase(remove(mUpdateList.begin(), mUpdateList.end(), updatable));
 	}
 
 	///------------------------------------------------------------------------

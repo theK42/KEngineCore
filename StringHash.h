@@ -8,9 +8,9 @@ struct StringHash
 	StringHash(StringHash const & other);
 	StringHash(char const * string, unsigned int hash);
 	StringHash(char const * string);
-	unsigned int hash;
+    unsigned int hash {0};
 #ifndef NDEBUG
-	char const * string;
+    char const * string {nullptr};
 #endif
 	inline operator unsigned int(void) const { return hash; }
 };
