@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6848D64D1FD28B49003C0DB9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6848D64C1FD28B3B003C0DB9 /* Foundation.framework */; };
 		6851561E1FC905A7003788B5 /* LuaLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A524161FE5B5006758A5 /* LuaLibrary.cpp */; };
 		6851561F1FC905A7003788B5 /* LuaScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A526161FE5B5006758A5 /* LuaScheduler.cpp */; };
 		685156201FC905A7003788B5 /* StringHash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A528161FE5B5006758A5 /* StringHash.cpp */; };
@@ -20,7 +21,7 @@
 		685156331FC905E3003788B5 /* libLua_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6851561B1FC905A4003788B5 /* libLua_iOS.a */; };
 		6851568B1FCBB929003788B5 /* TextFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6851568A1FCBB929003788B5 /* TextFile.mm */; };
 		6851568C1FCBB92C003788B5 /* TextFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6851568A1FCBB929003788B5 /* TextFile.mm */; };
-		943BDF071622A51B00B3AAB6 /* libLua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 943BDEAE1622864E00B3AAB6 /* libLua.a */; };
+		943BDF071622A51B00B3AAB6 /* libLua_Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 943BDEAE1622864E00B3AAB6 /* libLua_Mac.a */; };
 		94AF472215F2E14E00250F3F /* Updater.h in Headers */ = {isa = PBXBuildFile; fileRef = 94AF472115F2E14E00250F3F /* Updater.h */; };
 		94F1A52D161FE5B5006758A5 /* LuaLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94F1A524161FE5B5006758A5 /* LuaLibrary.cpp */; };
 		94F1A52E161FE5B5006758A5 /* LuaLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 94F1A525161FE5B5006758A5 /* LuaLibrary.h */; };
@@ -65,6 +66,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6848D64C1FD28B3B003C0DB9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6851562E1FC905A7003788B5 /* libKEngineCore_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKEngineCore_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		685156891FCBB5E5003788B5 /* TextFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextFile.h; sourceTree = "<group>"; };
 		6851568A1FCBB929003788B5 /* TextFile.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TextFile.mm; sourceTree = "<group>"; };
@@ -95,7 +97,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				943BDF071622A51B00B3AAB6 /* libLua.a in Frameworks */,
+				6848D64D1FD28B49003C0DB9 /* Foundation.framework in Frameworks */,
+				943BDF071622A51B00B3AAB6 /* libLua_Mac.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +108,7 @@
 		685156311FC905D3003788B5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6848D64C1FD28B3B003C0DB9 /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -112,7 +116,7 @@
 		943BDEA71622864D00B3AAB6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				943BDEAE1622864E00B3AAB6 /* libLua.a */,
+				943BDEAE1622864E00B3AAB6 /* libLua_Mac.a */,
 				6851561B1FC905A4003788B5 /* libLua_iOS.a */,
 			);
 			name = Products;
@@ -254,10 +258,10 @@
 			remoteRef = 6851561A1FC905A4003788B5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		943BDEAE1622864E00B3AAB6 /* libLua.a */ = {
+		943BDEAE1622864E00B3AAB6 /* libLua_Mac.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libLua.a;
+			path = libLua_Mac.a;
 			remoteRef = 943BDEAD1622864E00B3AAB6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
