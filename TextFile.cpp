@@ -8,7 +8,7 @@ void KEngineCore::TextFile::LoadFromFile(const std::string& filename, const std:
 	std::ifstream inFile;
 	inFile.open(filename + extension, std::ifstream::in | std::ifstream::binary);
 	if (!inFile) {
-		std::cerr << "Unable to open file datafile.txt";
+		std::cerr << "Unable to open file " + filename + extension;
 		exit(1);   // call system to stop
 	}
 
