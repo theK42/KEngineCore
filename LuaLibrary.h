@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Lua/lua.hpp"
+#include "lua.hpp"
 #include <functional>
 
 namespace KEngineCore {

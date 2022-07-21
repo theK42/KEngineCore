@@ -1,5 +1,5 @@
 #include "LuaScheduler.h"
-#include "Lua/lua.hpp"
+#include "lua.hpp"
 #include "TextFile.h"
 #include <assert.h>
 #include <vector>
@@ -113,7 +113,8 @@ void KEngineCore::LuaScheduler::Update() {
 		ScheduledLuaThread * thread = *it;
 		lua_State * threadState = thread->mThreadState;
 
-		int scriptResult = lua_resume(threadState, nullptr, thread->mReturnValues);
+		int nstack = 0;  
+		int scriptResult = lua_resume(threadState, nullptr, thread->mReturnValues, &nstack);
 		thread->mReturnValues = 0;
 		if (scriptResult != LUA_YIELD) {
 			deadThreads.push_back(thread);
