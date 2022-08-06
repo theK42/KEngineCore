@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include <functional>
+#include "List.h"
 #include "LuaLibrary.h"
 
 struct lua_State;
@@ -39,18 +40,19 @@ public:
 
 	ScheduledLuaThread * GetScheduledThread(lua_State * thread);
 
+	void LoadScript(lua_State * thread, char const * scriptPath);
 private:
 	void ScheduleThread(ScheduledLuaThread * thread, bool running);
     lua_State *	mMainState {nullptr};
-	std::vector<ScheduledLuaThread *>			mResumingThreads;
-	std::vector<ScheduledLuaThread *>			mPausingThreads;
-	std::list<ScheduledLuaThread *>				mRunningThreads;
+	List<ScheduledLuaThread, 0, 3>				mRunningThreads;
+	List<ScheduledLuaThread, 1, 3>				mPausingThreads;
+	List<ScheduledLuaThread, 2, 3>				mResumingThreads;
 	std::map<lua_State *, ScheduledLuaThread *>	mAllThreads;
-
+	int											mScriptTableRegistryIndex;
 	friend class ScheduledLuaThread;
 };
 
-class ScheduledLuaThread
+class ScheduledLuaThread : public ListElement<ScheduledLuaThread, 3>
 {
 public:
 	ScheduledLuaThread();
@@ -71,9 +73,9 @@ public:
 	lua_State * GetThreadState() const;
 private:
 
-    LuaScheduler *								mScheduler {nullptr};
-    lua_State *									mThreadState {nullptr};
-	std::list<ScheduledLuaThread *>::iterator	mPosition;
+
+	LuaScheduler *									mScheduler {nullptr};
+	lua_State *									mThreadState {nullptr};
 	int											mRegistryIndex {-1};
 	int											mReturnValues {-1};
 

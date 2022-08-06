@@ -18,4 +18,52 @@ public:
 };
 
 
+template <typename T>
+class LuaWrapping
+{
+public:
+	LuaWrapping() {mMetaTableName = nullptr;}
+	~LuaWrapping() {Deinit();}
+	void Init(char * metaTableName) { mMetaTableName = metaTableName; }
+	void Deinit() { mMetaTableName = nullptr; }
+	void WrapAndPush(lua_State * luaState, int index); 
+	T * Unwrap(lua_State * luaState, int index);
+	char const * GetMetaTableName() const { return mMetaTableName; }
+private:
+	char const * mMetaTableName;
+};
+
+template <typename T>
+void LuaWrapping<T>::WrapAndPush(lua_State * luaState, int index) {
+	lua_checkstack(luaState, 2);
+	if (!lua_islightuserdata(luaState, index)) {
+		luaL_argerror(luaState, index, "Light Userdata required.");
+		assert(0);
+		return;
+	}
+	T * pointer = (T *)lua_touserdata(luaState, index);
+	T ** pointerWrapper = (T **)lua_newuserdata(luaState, sizeof(T *));
+	(*pointerWrapper) = pointer;
+	luaL_getmetatable(luaState, mMetaTableName);
+	lua_setmetatable(luaState, -2);
+	
+}
+
+template <typename T>
+T * LuaWrapping<T>::Unwrap(lua_State * luaState, int index) {
+	assert(mMetaTableName != nullptr);
+	T * pointer;
+	if (lua_islightuserdata(luaState, index)) {
+		pointer = (T *)lua_touserdata(luaState, index);
+	} else if (lua_isuserdata(luaState, index)) {
+		pointer = *(T **)luaL_checkudata(luaState, index, mMetaTableName);
+	} else {
+		pointer = nullptr;
+		luaL_argerror(luaState, 1, "%s required.");
+	}
+	return pointer;
+}
+
+
+
 }

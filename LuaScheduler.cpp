@@ -21,10 +21,20 @@ void KEngineCore::LuaScheduler::Init() {
 	mMainState = luaL_newstate();
 	luaL_openlibs(mMainState);
 	RegisterLibrary(mMainState);
+
+	//Create a weak table for script loading
+	lua_checkstack(mMainState, 4);
+	lua_newtable(mMainState);
+	lua_newtable(mMainState);
+	lua_pushstring(mMainState, "__mode");
+	lua_pushstring(mMainState, "v");
+	lua_settable(mMainState, -3);
+	lua_setmetatable(mMainState, -2);
+	mScriptTableRegistryIndex = luaL_ref(mMainState, LUA_REGISTRYINDEX);
 }
 
 void KEngineCore::LuaScheduler::Deinit() {
-	mRunningThreads.clear();
+	mRunningThreads.Clear();
 	std::vector<ScheduledLuaThread *> deadThreads;
 	for (auto iterator = mAllThreads.begin(); iterator != mAllThreads.end(); iterator++) {
 		deadThreads.push_back(iterator->second);
@@ -52,22 +62,58 @@ void KEngineCore::LuaScheduler::ScheduleThread(ScheduledLuaThread * thread, bool
 	lua_xmove(thread->mThreadState, mMainState, 1); // move the thread to the main state
 	lua_settable(mMainState, LUA_REGISTRYINDEX); // registry[&thread] = thread->mThreadState;
 	if (running) {
-		mResumingThreads.push_back(thread);
+		mResumingThreads.PushBack(thread);
 	}
 	mAllThreads[thread->mThreadState] = thread;
 }
 
+void KEngineCore::LuaScheduler::LoadScript(lua_State * thread, char const * scriptPath) 
+{
+	lua_rawgeti(mMainState, LUA_REGISTRYINDEX, mScriptTableRegistryIndex);
+	lua_pushstring(mMainState, scriptPath);
+	lua_gettable(mMainState, -2);
+	if (lua_type(mMainState, -1) != LUA_TFUNCTION) {
+		lua_pop(mMainState, 1);
+		int val = luaL_loadfile(mMainState, scriptPath);  
+		char const * string;
+		switch (val) {
+		case LUA_ERRSYNTAX: ///syntax error during pre-compilation;			
+			string = lua_tostring(mMainState, -1);
+			fprintf(stderr, "Syntax Error: %s", string);
+			lua_pop(mMainState, 1);
+			assert(0);
+			break;
+		case LUA_ERRMEM: //memory allocation error.
+			string = lua_tostring(mMainState, -1);
+			fprintf(stderr, "Memory Error: %s", string);
+			lua_pop(mMainState, 1);
+			assert(0);
+			break;
+		case LUA_ERRFILE: //Couldn't load file
+			string = lua_tostring(mMainState, -1);
+			fprintf(stderr, "File Load Error: %s", string);
+			lua_pop(mMainState, 1);
+			assert(0);
+			break;
+		}
+		lua_pushstring(mMainState, scriptPath);
+		lua_pushvalue(mMainState, -2);
+		lua_settable(mMainState, -4);
+	}
+	lua_xmove(mMainState, thread, 1);
+	lua_pop(mMainState, 1);
+}
 
 void KEngineCore::LuaScheduler::PauseThread(ScheduledLuaThread * thread) {
 	assert(mMainState);
 	assert(thread->mScheduler == this);
-	mPausingThreads.push_back(thread);
+	mPausingThreads.PushBack(thread);
 }
 
 void KEngineCore::LuaScheduler::ResumeThread(ScheduledLuaThread * thread) {
 	assert(mMainState);
 	assert(thread->mScheduler == this);
-	mResumingThreads.push_back(thread);
+	mResumingThreads.PushBack(thread);
 }
 
 void KEngineCore::LuaScheduler::KillThread(ScheduledLuaThread * thread) {
@@ -82,35 +128,31 @@ void KEngineCore::LuaScheduler::KillThread(ScheduledLuaThread * thread) {
 	thread->SetRegistryIndex(LUA_REFNIL);
 	luaL_unref(mMainState, LUA_REGISTRYINDEX, threadRef);
 
-	if (thread->mPosition != mRunningThreads.end()) {
-		mRunningThreads.erase(thread->mPosition);
-		thread->mPosition = mRunningThreads.end();
-	}
+	mRunningThreads.Remove(thread);
+	
 	mAllThreads.erase(thread->mThreadState);
 }
 
 void KEngineCore::LuaScheduler::Update() {
 	std::vector<ScheduledLuaThread *> deadThreads;
+	
+	auto iterator = mPausingThreads.begin();
 
-	for (auto it = mPausingThreads.begin(); it != mPausingThreads.end(); it++)
+
+	for (ScheduledLuaThread * thread : mPausingThreads)
 	{
-		ScheduledLuaThread *thread = *it;
-		mRunningThreads.erase(thread->mPosition);
-		thread->mPosition = mRunningThreads.end();
+		mRunningThreads.Remove(thread);
 	}	
-	mPausingThreads.clear();
-
-	for (auto it = mResumingThreads.begin(); it != mResumingThreads.end(); it++)
+	mPausingThreads.Clear();
+	
+	for (ScheduledLuaThread * thread : mResumingThreads)
 	{
-		ScheduledLuaThread *thread = *it;
-		mRunningThreads.push_front(*it);
-		thread->mPosition = mRunningThreads.begin();
+		mRunningThreads.PushFront(thread);
 	}
-	mResumingThreads.clear();
-
-	for (auto it = mRunningThreads.begin(); it != mRunningThreads.end(); it++)
+	mResumingThreads.Clear();
+	
+	for (ScheduledLuaThread * thread : mRunningThreads)
 	{
-		ScheduledLuaThread * thread = *it;
 		lua_State * threadState = thread->mThreadState;
 
 		int nstack = 0;  
@@ -126,7 +168,7 @@ void KEngineCore::LuaScheduler::Update() {
 			}
 		}
 	}
-
+	
 	for (auto it = deadThreads.begin(); it != deadThreads.end(); it++) {
 		KillThread(*it);
 	}
@@ -245,10 +287,8 @@ KEngineCore::ScheduledLuaCallback KEngineCore::LuaScheduler::CreateCallback(lua_
 
 	callbackChunk->mScheduler = this;
 	callbackChunk->mFunctionRegistryIndex = functionRegistryIndex;  //Register the function
-	callbackChunk->mSelfRegistryIndex = luaL_ref(luaState, LUA_REGISTRYINDEX);  //Register callback chunk
+	callbackChunk->mSelfRegistryIndex = luaL_ref(luaState, LUA_REGISTRYINDEX);  //Register callback chunk (this keeps the CallbackChunk alive until cancel unregisters it)
 	
-	
-		
 	auto cb = [callbackChunk] () {
 			lua_State * luaState = callbackChunk->mScheduler->GetMainState();
 			KEngineCore::ScheduledLuaThread * scheduledThread = new (lua_newuserdata(luaState, sizeof(KEngineCore::ScheduledLuaThread))) KEngineCore::ScheduledLuaThread;
@@ -305,7 +345,7 @@ void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, char const 
 	lua_State * mainState = scheduler->GetMainState();
 	lua_State * thread = lua_newthread(mainState);
     
-    KEngineCore::TextFile file;
+    /*KEngineCore::TextFile file;
     file.LoadFromFile(fileName, ".lua");
     int val = luaL_loadbuffer(thread, file.GetContents().c_str(), file.GetContents().length(), fileName); //TODO: Check return value
 	char const * string;
@@ -329,7 +369,8 @@ void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, char const 
 				lua_pop(thread, 1);
 				assert(0);
 		break;
-	}
+	}*/
+	scheduler->LoadScript(thread, fileName);
 	Init(scheduler, thread, run);
 }
 

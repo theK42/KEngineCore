@@ -6,6 +6,7 @@ project(KEngineCore)
 add_library(KEngineCore STATIC 
 BinaryFile.h
 BinaryFile.cpp
+List.h
 LuaLibrary.h
 LuaLibrary.cpp
 LuaScheduler.h
