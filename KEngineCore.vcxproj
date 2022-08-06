@@ -22,7 +22,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2AA7F043-045F-3471-ABD4-E4714ED4EE5C}</ProjectGuid>
+    <ProjectGuid>{B945BBEE-61D6-3056-911A-EB7545C9E2A3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -60,27 +60,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\thek4\Documents\balltest\KEngineCore\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\thek4\Documents\KRBSG2\KEngineCore\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">KEngineCore.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">KEngineCore</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\thek4\Documents\balltest\KEngineCore\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\thek4\Documents\KRBSG2\KEngineCore\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">KEngineCore.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">KEngineCore</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\thek4\Documents\balltest\KEngineCore\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\thek4\Documents\KRBSG2\KEngineCore\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">KEngineCore.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">KEngineCore</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\thek4\Documents\balltest\KEngineCore\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\thek4\Documents\KRBSG2\KEngineCore\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">KEngineCore.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">KEngineCore</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/thek4/Documents/balltest/_deps/boost-src"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/thek4/Documents/KRBSG2/_deps/boost-src"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -98,14 +98,14 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;BOOST_ALL_NO_LIB=1;BOOST_SYSTEM_NO_DEPRECATED;BOOST_THREAD_VERSION=4;BOOST_THREAD_USES_CHRONO;BOOST_THREAD_PROVIDES_EXECUTORS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;BOOST_ALL_NO_LIB=1;BOOST_SYSTEM_NO_DEPRECATED;BOOST_THREAD_VERSION=4;BOOST_THREAD_USES_CHRONO;BOOST_THREAD_PROVIDES_EXECUTORS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
-      <IncludePaths>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(IncludePaths)</IncludePaths>
+      <IncludePaths>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(IncludePaths)</IncludePaths>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -118,8 +118,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/thek4/Documents/balltest/_deps/boost-src"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/thek4/Documents/KRBSG2/_deps/boost-src"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
@@ -137,14 +137,14 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;BOOST_ALL_NO_LIB=1;BOOST_DISABLE_ASSERT;BOOST_SYSTEM_NO_DEPRECATED;BOOST_THREAD_VERSION=4;BOOST_THREAD_USES_CHRONO;BOOST_THREAD_PROVIDES_EXECUTORS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;BOOST_ALL_NO_LIB=1;BOOST_DISABLE_ASSERT;BOOST_SYSTEM_NO_DEPRECATED;BOOST_THREAD_VERSION=4;BOOST_THREAD_USES_CHRONO;BOOST_THREAD_PROVIDES_EXECUTORS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
-      <IncludePaths>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(IncludePaths)</IncludePaths>
+      <IncludePaths>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(IncludePaths)</IncludePaths>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -157,8 +157,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/thek4/Documents/balltest/_deps/boost-src"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/thek4/Documents/KRBSG2/_deps/boost-src"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
@@ -176,14 +176,14 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;BOOST_ALL_NO_LIB=1;BOOST_SYSTEM_NO_DEPRECATED;BOOST_THREAD_VERSION=4;BOOST_THREAD_USES_CHRONO;BOOST_THREAD_PROVIDES_EXECUTORS;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;BOOST_ALL_NO_LIB=1;BOOST_SYSTEM_NO_DEPRECATED;BOOST_THREAD_VERSION=4;BOOST_THREAD_USES_CHRONO;BOOST_THREAD_PROVIDES_EXECUTORS;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
-      <IncludePaths>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(IncludePaths)</IncludePaths>
+      <IncludePaths>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(IncludePaths)</IncludePaths>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -196,8 +196,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/thek4/Documents/balltest/_deps/boost-src"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/thek4/Documents/KRBSG2/_deps/boost-src"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -214,14 +214,14 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;BOOST_ALL_NO_LIB=1;BOOST_SYSTEM_NO_DEPRECATED;BOOST_THREAD_VERSION=4;BOOST_THREAD_USES_CHRONO;BOOST_THREAD_PROVIDES_EXECUTORS;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <MASM>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;BOOST_ALL_NO_LIB=1;BOOST_SYSTEM_NO_DEPRECATED;BOOST_THREAD_VERSION=4;BOOST_THREAD_USES_CHRONO;BOOST_THREAD_PROVIDES_EXECUTORS;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
-      <IncludePaths>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(IncludePaths)</IncludePaths>
+      <IncludePaths>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(IncludePaths)</IncludePaths>
     </MASM>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\balltest\KEngineCore;C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\balltest\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\thek4\Documents\KRBSG2\KEngineCore;C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\include;C:\Users\thek4\Documents\KRBSG2\_deps\boost-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -233,11 +233,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\thek4\Documents\balltest\KEngineCore\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/thek4/Documents/balltest/KEngineCore/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/thek4/Documents/KRBSG2/KEngineCore/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/thek4/Documents/balltest -BC:/Users/thek4/Documents/balltest --check-stamp-file C:/Users/thek4/Documents/balltest/KEngineCore/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/thek4/Documents/KRBSG2 -BC:/Users/thek4/Documents/KRBSG2 --check-stamp-file C:/Users/thek4/Documents/KRBSG2/KEngineCore/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -246,11 +246,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\thek4\Documents\balltest\KEngineCore\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\thek4\Documents\KRBSG2\KEngineCore\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/thek4/Documents/balltest/KEngineCore/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/thek4/Documents/KRBSG2/KEngineCore/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/thek4/Documents/balltest -BC:/Users/thek4/Documents/balltest --check-stamp-file C:/Users/thek4/Documents/balltest/KEngineCore/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/thek4/Documents/KRBSG2 -BC:/Users/thek4/Documents/KRBSG2 --check-stamp-file C:/Users/thek4/Documents/KRBSG2/KEngineCore/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -259,11 +259,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\thek4\Documents\balltest\KEngineCore\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\thek4\Documents\KRBSG2\KEngineCore\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/thek4/Documents/balltest/KEngineCore/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/thek4/Documents/KRBSG2/KEngineCore/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/thek4/Documents/balltest -BC:/Users/thek4/Documents/balltest --check-stamp-file C:/Users/thek4/Documents/balltest/KEngineCore/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/thek4/Documents/KRBSG2 -BC:/Users/thek4/Documents/KRBSG2 --check-stamp-file C:/Users/thek4/Documents/KRBSG2/KEngineCore/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -272,11 +272,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\thek4\Documents\balltest\KEngineCore\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\thek4\Documents\KRBSG2\KEngineCore\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/thek4/Documents/balltest/KEngineCore/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/thek4/Documents/KRBSG2/KEngineCore/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/thek4/Documents/balltest -BC:/Users/thek4/Documents/balltest --check-stamp-file C:/Users/thek4/Documents/balltest/KEngineCore/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/thek4/Documents/KRBSG2 -BC:/Users/thek4/Documents/KRBSG2 --check-stamp-file C:/Users/thek4/Documents/KRBSG2/KEngineCore/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -285,36 +285,36 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\thek4\Documents\balltest\KEngineCore\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\thek4\Documents\KRBSG2\KEngineCore\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\thek4\Documents\balltest\KEngineCore\BinaryFile.h" />
-    <ClCompile Include="C:\Users\thek4\Documents\balltest\KEngineCore\BinaryFile.cpp" />
-    <ClInclude Include="C:\Users\thek4\Documents\balltest\KEngineCore\LuaLibrary.h" />
-    <ClCompile Include="C:\Users\thek4\Documents\balltest\KEngineCore\LuaLibrary.cpp" />
-    <ClInclude Include="C:\Users\thek4\Documents\balltest\KEngineCore\LuaScheduler.h" />
-    <ClCompile Include="C:\Users\thek4\Documents\balltest\KEngineCore\LuaScheduler.cpp" />
-    <ClInclude Include="C:\Users\thek4\Documents\balltest\KEngineCore\StringHash.h" />
-    <ClCompile Include="C:\Users\thek4\Documents\balltest\KEngineCore\StringHash.cpp" />
-    <ClInclude Include="C:\Users\thek4\Documents\balltest\KEngineCore\TextFile.h" />
-    <ClCompile Include="C:\Users\thek4\Documents\balltest\KEngineCore\TextFile.cpp" />
-    <ClInclude Include="C:\Users\thek4\Documents\balltest\KEngineCore\Timer.h" />
-    <ClCompile Include="C:\Users\thek4\Documents\balltest\KEngineCore\Timer.cpp" />
-    <ClInclude Include="C:\Users\thek4\Documents\balltest\KEngineCore\Updater.h" />
-    <ClCompile Include="C:\Users\thek4\Documents\balltest\KEngineCore\Updater.cpp" />
-    <ClInclude Include="C:\Users\thek4\Documents\balltest\KEngineCore\Lua.hpp" />
+    <ClInclude Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\BinaryFile.h" />
+    <ClCompile Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\BinaryFile.cpp" />
+    <ClInclude Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\LuaLibrary.h" />
+    <ClCompile Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\LuaLibrary.cpp" />
+    <ClInclude Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\LuaScheduler.h" />
+    <ClCompile Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\LuaScheduler.cpp" />
+    <ClInclude Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\StringHash.h" />
+    <ClCompile Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\StringHash.cpp" />
+    <ClInclude Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\TextFile.h" />
+    <ClCompile Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\TextFile.cpp" />
+    <ClInclude Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\Timer.h" />
+    <ClCompile Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\Timer.cpp" />
+    <ClInclude Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\Updater.h" />
+    <ClCompile Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\Updater.cpp" />
+    <ClInclude Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\Lua.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\thek4\Documents\balltest\ZERO_CHECK.proj">
-      <Project>{EB027DB5-11C6-36BB-AC67-C5391205E89B}</Project>
+    <ProjectReference Include="C:\Users\thek4\Documents\KRBSG2\ZERO_CHECK.proj">
+      <Project>{6BEC8CF5-38A2-3E25-8AE2-405CDF040AFF}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\thek4\Documents\balltest\KEngineCore\lua-cmake\lua.vcxproj">
-      <Project>{1AC3D83F-DDDB-3547-96AE-82F466415433}</Project>
+    <ProjectReference Include="C:\Users\thek4\Documents\KRBSG2\KEngineCore\lua-cmake\lua.vcxproj">
+      <Project>{C80533F0-679C-3E7C-B01C-60F89DE0D24E}</Project>
       <Name>lua</Name>
     </ProjectReference>
   </ItemGroup>
