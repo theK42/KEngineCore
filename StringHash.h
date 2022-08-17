@@ -12,7 +12,7 @@ struct StringHash
 #ifndef NDEBUG
     char const * string {nullptr};
 #endif
-	inline operator unsigned int(void) const { return hash; }
+	constexpr inline operator unsigned int(void) const { return hash; }
 };
 
 }
