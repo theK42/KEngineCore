@@ -48,7 +48,7 @@ public:
 	void Cancel();
 
 private:
-	Timer *							mTimer;
+	Timer*							mTimer{ nullptr };
     double							mSetTime {0.0};
     int								mFiresAt {0};
     bool							mRepeats {false};
