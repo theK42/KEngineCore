@@ -121,7 +121,7 @@ namespace KEngineCore
 	}
 
 	template <typename T, int M, int N>
-	bool typename List<T, M, N>::iterator::operator!=(iterator const & other) {
+	bool List<T, M, N>::iterator::operator!=(iterator const & other) {
 		return mElement != other.mElement;
 	}
 
