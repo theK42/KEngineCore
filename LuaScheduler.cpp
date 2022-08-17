@@ -1,7 +1,6 @@
 #include "LuaScheduler.h"
 #include "lua.hpp"
 #include "TextFile.h"
-#include <assert.h>
 #include <vector>
 
 
@@ -263,60 +262,6 @@ void KEngineCore::LuaScheduler::RegisterLibrary(lua_State * luaState, char const
 	lua_checkstack(luaState, 1);
 	luaL_newmetatable(luaState, "KEngineCore.Callbackything");
 	lua_pop(luaState, 1);
-}
-
-namespace KEngineCore{
-struct CallbackChunk {
-	LuaScheduler * mScheduler;
-	int mSelfRegistryIndex;
-	int mFunctionRegistryIndex;
-};
-}
-
-//This callback doesn't work (tries to run a thread instead of a function?)  and if it did the callback would be non-reentrant!  MUST FIX!
-KEngineCore::ScheduledLuaCallback KEngineCore::LuaScheduler::CreateCallback(lua_State * luaState, int callbackIndex) 
-{	
-	assert(mMainState);
-	luaL_checktype(luaState, callbackIndex, LUA_TFUNCTION);
-	lua_pushvalue(luaState, callbackIndex);
-	int functionRegistryIndex = luaL_ref(luaState, LUA_REGISTRYINDEX);
-
-	CallbackChunk * callbackChunk = new (lua_newuserdata(luaState, sizeof(CallbackChunk))) CallbackChunk;
-	luaL_getmetatable(luaState, "KEngineCore.Callbackything");
-	lua_setmetatable(luaState, -2);
-
-	callbackChunk->mScheduler = this;
-	callbackChunk->mFunctionRegistryIndex = functionRegistryIndex;  //Register the function
-	callbackChunk->mSelfRegistryIndex = luaL_ref(luaState, LUA_REGISTRYINDEX);  //Register callback chunk (this keeps the CallbackChunk alive until cancel unregisters it)
-	
-	auto cb = [callbackChunk] () {
-			lua_State * luaState = callbackChunk->mScheduler->GetMainState();
-			KEngineCore::ScheduledLuaThread * scheduledThread = new (lua_newuserdata(luaState, sizeof(KEngineCore::ScheduledLuaThread))) KEngineCore::ScheduledLuaThread;
-			luaL_getmetatable(luaState, "KEngineCore.ScheduledThread");
-			lua_setmetatable(luaState, -2);
-
-			lua_State * thread = lua_newthread(luaState);
-			lua_rawgeti(luaState, LUA_REGISTRYINDEX, callbackChunk->mFunctionRegistryIndex); //get the function
-			luaL_checktype(luaState, -1, LUA_TFUNCTION); //check for a function
-			lua_xmove(luaState, thread, 1); //move the function from the parent thread to the child
-
-			scheduledThread->Init(callbackChunk->mScheduler, thread);
-			lua_pop(luaState, 1); //Pop the thread off the stack now that it's been wrapped
-			scheduledThread->SetRegistryIndex(luaL_ref(luaState, LUA_REGISTRYINDEX));  //This pops the wrapped thread and copies it to the registry as well
-			scheduledThread->Resume();
-		};
-
-	auto cancel = [callbackChunk] () {
-			lua_State * luaState = callbackChunk->mScheduler->GetMainState();
-			luaL_unref(luaState, LUA_REGISTRYINDEX, callbackChunk->mFunctionRegistryIndex); // drop the function reference
-			luaL_unref(luaState, LUA_REGISTRYINDEX, callbackChunk->mSelfRegistryIndex); // drop the chunk reference
-		};
-
-	ScheduledLuaCallback retVal = {
-		cb,
-		cancel
-	};
-	return retVal;
 }
 
 KEngineCore::ScheduledLuaThread::ScheduledLuaThread()

@@ -55,8 +55,8 @@ void KEngineCore::Timer::Update(double time)
 
 void KEngineCore::Timer::AddTimeout(Timeout * timeout)
 {
-	mTimeouts.push_front(timeout);
-	timeout->mPosition = mTimeouts.begin();
+	mTimeouts.push_back(timeout);
+	timeout->mPosition = std::next(mTimeouts.rbegin()).base();
 	timeout->mFiresAt = (int)((timeout->mSetTime + mCurrentTime) * 1000);
 }
 
@@ -85,7 +85,7 @@ static int setTimeout(lua_State * luaState) {
 	luaL_getmetatable(luaState, "KEngineCore.Timeout");
 	lua_setmetatable(luaState, -2);
 
-	KEngineCore::ScheduledLuaCallback callback = scheduler->CreateCallback(luaState, 2);
+	KEngineCore::ScheduledLuaCallback<> callback = scheduler->CreateCallback<>(luaState, 2);
 	timeout->Init(timer, requestedTime, false, callback.mCallback, callback.mCancelCallback);
 	return 1;
 }
@@ -100,12 +100,10 @@ static int setInterval(lua_State * luaState) {
 	KEngineCore::Timeout * timeout = new (lua_newuserdata(luaState, sizeof(KEngineCore::Timeout))) KEngineCore::Timeout;
 	luaL_getmetatable(luaState, "KEngineCore.Timeout");
 	lua_setmetatable(luaState, -2);
-	luaL_checkudata(luaState, -1, "KEngineCore.Timeout");
 	
-	KEngineCore::ScheduledLuaCallback callback = scheduler->CreateCallback(luaState, 2);
+	KEngineCore::ScheduledLuaCallback<> callback = scheduler->CreateCallback<>(luaState, 2);
 	timeout->Init(timer, requestedTime, true, callback.mCallback, callback.mCancelCallback);
 
-	//luaL_checkudata(luaState, -1, "KEngineCore.Timeout");
 
 	return 1;
 }
@@ -199,10 +197,7 @@ void KEngineCore::Timeout::Init(Timer *timer, double time, bool repeats, std::fu
 
 void KEngineCore::Timeout::Deinit()
 {
-	if (mTimer && mPosition != mTimer->mTimeouts.end()) {
-		Cancel();
-	}
-	mTimer = nullptr;
+	Cancel();
 }
 
 void KEngineCore::Timeout::TimeElapsed()
@@ -218,4 +213,5 @@ void KEngineCore::Timeout::Cancel() {
 			mCancelCallback();
 		}
 	}
+	mTimer = nullptr;
 }
