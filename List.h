@@ -1,6 +1,4 @@
-
 #pragma once
-
 #include "boost/noncopyable.hpp"
 
 namespace KEngineCore
@@ -13,58 +11,58 @@ namespace KEngineCore
 	class ListElement : public boost::noncopyable
 	{
 	public:
-		
-		ListElement(){}
-  
-		template< int M >
-		ListElement *	GetNext() const;
+
+		ListElement() {}
 
 		template< int M >
-		ListElement *	GetPrev() const;
+		ListElement* GetNext() const;
 
 		template< int M >
-		void	SetNext( ListElement * next );
+		ListElement* GetPrev() const;
 
 		template< int M >
-		void	SetPrev( ListElement * prev );
-		
+		void	SetNext(ListElement* next);
+
+		template< int M >
+		void	SetPrev(ListElement* prev);
+
 	private:
 		ListElement(const ListElement&) {}
 
-		ListElement *	mNext[ N ];
-		ListElement *	mPrev[ N ];
+		ListElement* mNext[N];
+		ListElement* mPrev[N];
 	};
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int N > template< int M >
-	inline ListElement<T, N> * ListElement< T, N >::GetNext() const
+	inline ListElement<T, N>* ListElement< T, N >::GetNext() const
 	{
-		return mNext[ M ];
+		return mNext[M];
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int N > template< int M >
-	inline ListElement<T, N> * ListElement< T, N >::GetPrev() const
+	inline ListElement<T, N>* ListElement< T, N >::GetPrev() const
 	{
-		return mPrev[ M ];
+		return mPrev[M];
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int N > template< int M >
-	inline void ListElement< T, N >::SetNext( ListElement<T, N> * next )
+	inline void ListElement< T, N >::SetNext(ListElement<T, N>* next)
 	{
-		mNext[ M ] = next;
+		mNext[M] = next;
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int N > template< int M >
-	inline void ListElement< T, N >::SetPrev( ListElement<T, N> * prev )
+	inline void ListElement< T, N >::SetPrev(ListElement<T, N>* prev)
 	{
-		mPrev[ M ] = prev;
+		mPrev[M] = prev;
 	}
 
 	///------------------------------------------------------------------------
@@ -80,30 +78,30 @@ namespace KEngineCore
 
 		bool		IsEmpty() const;
 
-		T *			GetFront() const;
-		T *			GetBack() const;
+		T* GetFront() const;
+		T* GetBack() const;
 
-		void		InsertBefore( T * item, ListElement<T, N> * pAnchor );
-		void		InsertAfter( T * item, ListElement<T, N> * pAnchor );
-		void		Remove( T * item );
+		void		InsertBefore(T* item, ListElement<T, N>* pAnchor);
+		void		InsertAfter(T* item, ListElement<T, N>* pAnchor);
+		void		Remove(T* item);
 
-		void		PushFront( T * item );
-		void		PushBack( T * item );
+		void		PushFront(T* item);
+		void		PushBack(T* item);
 
-		T *			PopFront();
-		T *			PopBack();
+		T* PopFront();
+		T* PopBack();
 
 		//For range based for
 		class iterator {
 		public:
-			iterator(ListElement<T,N> * element) { mElement = element; }
-			T * operator*();
-			iterator & operator++();
-			bool operator!=(iterator const & other);
+			iterator(ListElement<T, N>* element) { mElement = element; }
+			T* operator*();
+			iterator& operator++();
+			bool operator!=(iterator const& other);
 		private:
-			ListElement<T, N> * mElement; 
+			ListElement<T, N>* mElement;
 		};
-		
+
 		iterator		begin();
 		iterator	 	end();
 	private:
@@ -112,29 +110,29 @@ namespace KEngineCore
 
 	template <typename T, int M, int N>
 	typename List<T, M, N>::iterator List<T, M, N>::begin() {
-		return iterator(mHead.GetNext<M>());
+		return iterator(mHead.template GetNext<M>());
 	}
-	
+
 	template <typename T, int M, int N>
 	typename List<T, M, N>::iterator List<T, M, N>::end() {
 		return iterator(&mHead);
 	}
 
 	template <typename T, int M, int N>
-	bool List<T, M, N>::iterator::operator!=(iterator const & other) {
+	bool List<T, M, N>::iterator::operator!=(iterator const& other) {
 		return mElement != other.mElement;
 	}
 
-	
+
 	template <typename T, int M, int N>
-	typename List<T, M, N>::iterator & List<T, M, N>::iterator::operator++() {
-		mElement = mElement->GetNext<M>(); 
+	typename List<T, M, N>::iterator& List<T, M, N>::iterator::operator++() {
+		mElement = mElement->template GetNext<M>();
 		return *this;
-	}	
-	
+	}
+
 	template <typename T, int M, int N>
-	T * List<T, M, N>::iterator::operator*() {
-		return static_cast<T *>(mElement);
+	T* List<T, M, N>::iterator::operator*() {
+		return static_cast<T*>(mElement);
 	}
 
 	///------------------------------------------------------------------------
@@ -142,8 +140,8 @@ namespace KEngineCore
 	template< typename T, int M, int N >
 	inline void List< T, M, N >::Clear()
 	{
-		mHead.SetNext<M>( &mHead );
-		mHead.SetPrev<M>( &mHead );
+		mHead.template SetNext<M>(&mHead);
+		mHead.template SetPrev<M>(&mHead);
 	}
 
 	///------------------------------------------------------------------------
@@ -159,104 +157,104 @@ namespace KEngineCore
 	template< typename T, int M, int N >
 	inline bool List< T, M, N >::IsEmpty() const
 	{
-		return mHead.GetNext<M>() == &mHead;
+		return mHead.template GetNext<M>() == &mHead;
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int M, int N >
-	inline T * List< T, M, N >::GetFront() const
+	inline T* List< T, M, N >::GetFront() const
 	{
-		return mHead.GetNext<M>();
+		return mHead.template GetNext<M>();
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int M, int N >
-	inline T * List< T, M, N >::GetBack() const
+	inline T* List< T, M, N >::GetBack() const
 	{
-		return mHead.GetPrev<M>();
+		return mHead.template GetPrev<M>();
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int M, int N >
-	inline void List< T, M, N >::InsertBefore( T * item, ListElement<T, N> * pAnchor )
+	inline void List< T, M, N >::InsertBefore(T* item, ListElement<T, N>* pAnchor)
 	{
-		ListElement<T, N> * prev = pAnchor->GetPrev<M>();
-		ListElement<T, N> * next = pAnchor;
+		ListElement<T, N>* prev = pAnchor->template GetPrev<M>();
+		ListElement<T, N>* next = pAnchor;
 
-		prev->SetNext<M>( item );
-		next->SetPrev<M>( item );
-		item->SetPrev<M>( prev );
-		item->SetNext<M>( next );
+		prev->template SetNext<M>(item);
+		next->template SetPrev<M>(item);
+		item->template SetPrev<M>(prev);
+		item->template SetNext<M>(next);
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int M, int N >
-	inline void List< T, M, N >::InsertAfter( T * item, ListElement<T, N> * pAnchor )
+	inline void List< T, M, N >::InsertAfter(T* item, ListElement<T, N>* pAnchor)
 	{
-		ListElement<T, N> * prev = pAnchor;
-		ListElement<T, N> * next = pAnchor->GetNext<M>();
+		ListElement<T, N>* prev = pAnchor;
+		ListElement<T, N>* next = pAnchor->template GetNext<M>();
 
-		prev->SetNext<M>( item );
-		next->SetPrev<M>( item );
-		item->SetPrev<M>( prev );
-		item->SetNext<M>( next );
+		prev->template SetNext<M>(item);
+		next->template SetPrev<M>(item);
+		item->template SetPrev<M>(prev);
+		item->template SetNext<M>(next);
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int M, int N >
-	inline void List< T, M, N >::Remove( T * item )
+	inline void List< T, M, N >::Remove(T* item)
 	{
-		ListElement<T, N> * prev = item->GetPrev<M>();
-		ListElement<T, N> * next = item->GetNext<M>();
+		ListElement<T, N>* prev = item->template GetPrev<M>();
+		ListElement<T, N>* next = item->template GetNext<M>();
 
-		prev->SetNext<M>( next );
-		next->SetPrev<M>( prev );
-		item->SetNext<M>( item );
-		item->SetPrev<M>( item );
+		prev->template SetNext<M>(next);
+		next->template SetPrev<M>(prev);
+		item->template SetNext<M>(item);
+		item->template SetPrev<M>(item);
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int M, int N >
-	inline void List< T, M, N >::PushFront( T * item )
+	inline void List< T, M, N >::PushFront(T* item)
 	{
-		InsertAfter( item, &mHead );
+		InsertAfter(item, &mHead);
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int M, int N >
-	inline void List< T, M, N >::PushBack( T * item )
+	inline void List< T, M, N >::PushBack(T* item)
 	{
-		InsertBefore( item, &mHead );
+		InsertBefore(item, &mHead);
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int M, int N >
-	inline T * List< T, M, N >::PopFront()
+	inline T* List< T, M, N >::PopFront()
 	{
-		T * pFront = GetFront();
-		Remove( pFront );
+		T* pFront = GetFront();
+		Remove(pFront);
 		return pFront;
 	}
 
 	///------------------------------------------------------------------------
 
 	template< typename T, int M, int N >
-	inline T * List< T, M, N >::PopBack()
+	inline T* List< T, M, N >::PopBack()
 	{
-		T * pBack = GetBack();
-		Remove( pBack );
+		T* pBack = GetBack();
+		Remove(pBack);
 		return pBack;
 	}
 
 	///------------------------------------------------------------------------
 	///------------------------------------------------------------------------
 
-;} /// namespace XEngine
+} /// namespace KEngine
