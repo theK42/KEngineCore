@@ -2,6 +2,7 @@
 
 #include "Lua.hpp"
 #include <functional>
+#include <assert.h>
 
 namespace KEngineCore {
 class LuaLibrary
