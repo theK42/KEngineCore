@@ -1,5 +1,5 @@
 #include "LuaScheduler.h"
-#include "lua.hpp"
+#include "Lua.hpp"
 #include "TextFile.h"
 #include <vector>
 

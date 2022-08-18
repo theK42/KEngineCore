@@ -1,12 +1,12 @@
 #pragma once
 
+#include "List.h"
+#include "LuaLibrary.h"
 #include <map>
 #include <list>
 #include <vector>
 #include <functional>
 #include <assert.h>
-#include "List.h"
-#include "LuaLibrary.h"
 
 struct lua_State;
 
