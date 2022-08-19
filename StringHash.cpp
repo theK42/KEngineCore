@@ -1,8 +1,8 @@
 #include "StringHash.h"
+#include "boost/crc.hpp"
 #include <assert.h>
 #include <string>
-#include "boost/crc.hpp"
-
+#include <cstring>
 
 KEngineCore::StringHash::StringHash()
 {
