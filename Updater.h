@@ -70,7 +70,10 @@ namespace KEngineCore {
 	template <class TClass>
 	void Updating<TClass>::Deinit()
 	{
-		Stop();
+		if (mUpdater != nullptr)
+		{
+			Stop();
+		}
 		mUpdater = nullptr;
 	}
 
