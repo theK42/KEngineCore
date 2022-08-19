@@ -25,7 +25,7 @@ class LuaWrapping
 public:
 	LuaWrapping() {mMetaTableName = nullptr;}
 	~LuaWrapping() {Deinit();}
-	void Init(char * metaTableName) { mMetaTableName = metaTableName; }
+	void Init(const char * metaTableName) { mMetaTableName = metaTableName; }
 	void Deinit() { mMetaTableName = nullptr; }
 	void WrapAndPush(lua_State * luaState, int index); 
 	T * Unwrap(lua_State * luaState, int index);
