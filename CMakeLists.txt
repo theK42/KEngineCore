@@ -21,6 +21,8 @@ Updater.h
 Updater.cpp
 Lua.hpp
 )
+
+target_compile_features(KEngineCore PUBLIC cxx_std_20) 
 target_include_directories(KEngineCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(boost-cmake)
 set(BUILD_SHARED_LIBS OFF)

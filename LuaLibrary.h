@@ -3,6 +3,7 @@
 #include "Lua.hpp"
 #include <functional>
 #include <assert.h>
+#include <string>
 
 namespace KEngineCore {
 class LuaLibrary
@@ -16,6 +17,10 @@ public:
 	void PreloadLibraryIntoTable(lua_State * luaState, char const * name, lua_CFunction libraryFunction, int tableIndex);
 
 	static void CreateLocalEnvironment(lua_State * scriptState, std::function<void (lua_State *)> registerLocalLibraries);
+
+	template <typename T, const char* S>
+	static void CreateGCMetaTableForClass(lua_State* luaState);
+
 };
 
 
@@ -65,6 +70,23 @@ T * LuaWrapping<T>::Unwrap(lua_State * luaState, int index) {
 	return pointer;
 }
 
+
+template <typename T, const char* S>
+static void LuaLibrary::CreateGCMetaTableForClass(lua_State* luaState)
+{
+	auto destroy = [](lua_State* luaState) {
+		T* binding = (T*)luaL_checkudata(luaState, 1, S);
+		binding->~T();
+		return 0;
+	};
+
+	lua_checkstack(luaState, 3);
+	luaL_newmetatable(luaState, S);
+	lua_pushstring(luaState, "__gc");
+	lua_pushcfunction(luaState, destroy);
+	lua_settable(luaState, -3);
+	lua_pop(luaState, 1);
+}
 
 
 }

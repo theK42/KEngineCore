@@ -86,3 +86,5 @@ void KEngineCore::LuaLibrary::CreateLocalEnvironment(lua_State * scriptState, st
 	//Set the new environment as the first upvalue of the script
 	lua_setupvalue(scriptState, -2, 1);
 }
+
+
