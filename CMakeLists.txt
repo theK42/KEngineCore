@@ -11,6 +11,7 @@ LuaLibrary.h
 LuaLibrary.cpp
 LuaScheduler.h
 LuaScheduler.cpp
+Pool.h
 StringHash.h
 StringHash.cpp
 TextFile.h
