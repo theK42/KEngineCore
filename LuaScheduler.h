@@ -55,6 +55,7 @@ private:
 	List<ScheduledLuaThread, 2, 3>				mResumingThreads;
 	std::map<lua_State *, ScheduledLuaThread *>	mAllThreads;
 	int											mScriptTableRegistryIndex;
+	ScheduledLuaThread *						mCurrentRunningThread;
 	friend class ScheduledLuaThread;
 };
 

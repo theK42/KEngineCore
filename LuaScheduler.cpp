@@ -116,6 +116,7 @@ void KEngineCore::LuaScheduler::ResumeThread(ScheduledLuaThread * thread) {
 }
 
 void KEngineCore::LuaScheduler::KillThread(ScheduledLuaThread * thread) {
+	assert(thread != mCurrentRunningThread);//Look, it's simply not valid to kill threads while they are running.  
 	assert(mMainState);
 	assert(thread->mScheduler == this);
 	lua_checkstack(mMainState, 2);
@@ -152,8 +153,8 @@ void KEngineCore::LuaScheduler::Update() {
 	
 	for (ScheduledLuaThread * thread : mRunningThreads)
 	{
+		mCurrentRunningThread = thread;
 		lua_State * threadState = thread->mThreadState;
-
 		int nstack = 0;  
 		int scriptResult = lua_resume(threadState, nullptr, thread->mReturnValues, &nstack);
 		thread->mReturnValues = 0;
@@ -167,6 +168,7 @@ void KEngineCore::LuaScheduler::Update() {
 			}
 		}
 	}
+	mCurrentRunningThread = nullptr;
 	
 	for (auto it = deadThreads.begin(); it != deadThreads.end(); it++) {
 		KillThread(*it);
@@ -184,10 +186,11 @@ static int create(lua_State * luaState) {
 	lua_checkstack(luaState, 1);
 	luaL_getmetatable(luaState, "KEngineCore.ScheduledThread");
 	lua_setmetatable(luaState, -2);
-	
-	char const * fileName = luaL_optstring(luaState, 1, nullptr);
-	if (fileName != nullptr) {
-        KEngineCore::TextFile file;
+
+	lua_State* thread = lua_newthread(luaState);
+	if (lua_type(luaState, 1) == LUA_TSTRING) {
+		char const * fileName = lua_tostring(luaState, 1); 
+	    KEngineCore::TextFile file;
         file.LoadFromFile(fileName, ".lua");
 		int val = luaL_loadbuffer(luaState, file.GetContents().c_str(), file.GetContents().length(), fileName); //TODO: Check return value
 	} else {
@@ -196,9 +199,9 @@ static int create(lua_State * luaState) {
 		lua_pushvalue(luaState, 1);
 	}
 			
-	lua_State * thread = lua_newthread(luaState);	
-	lua_checkstack(luaState, 1);
-	lua_xmove(luaState, scheduledThread->GetThreadState(), 1); //move the function from the parent thread to the child
+	lua_checkstack(thread, 1); 
+	assert(lua_type(luaState, -1) == LUA_TFUNCTION);
+	lua_xmove(luaState, thread, 1); //move the function from the parent thread to the child
 	scheduledThread->Init(scheduler, thread);
 
 	lua_pop(luaState, 1);  // Pop the raw thread, it has been copied to the registry.
