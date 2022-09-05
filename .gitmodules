@@ -3,4 +3,4 @@
 	url = git@github.com:Orphis/boost-cmake.git
 [submodule "lua-cmake"]
 	path = lua-cmake
-	url = git@github.com:lubgr/lua-cmake.git
+url=git@github.com:Dantsz/lua-cmake.git
