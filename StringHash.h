@@ -1,6 +1,10 @@
 #pragma once
 #include <functional>
 
+#ifdef NDEBUG   
+    #define DELETE_STRINGS
+#endif
+
 namespace KEngineCore {
 struct StringHash
 {
@@ -9,14 +13,14 @@ struct StringHash
 	StringHash(char const * string, unsigned int hash);
 	StringHash(char const * string);
     unsigned int hash {0};
-#ifndef NDEBUG
+#ifndef DELETE_STRINGS
     char const * string {nullptr};
 #endif
 	constexpr inline operator unsigned int(void) const { return hash; }
 };
 
 }
-#ifndef NDEBUG
+#ifndef DELETE_STRINGS
 #define HASH(string, hash) (KEngineCore::StringHash(string, hash))
 #else
 #define HASH(string, hash) (KEngineCore::StringHash(nullptr, hash))

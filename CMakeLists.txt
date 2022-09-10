@@ -21,6 +21,10 @@ Timer.cpp
 Updater.h
 Updater.cpp
 Lua.hpp
+DataTree.h
+DataTree.cpp
+StringTable.h
+StringTable.cpp
 )
 
 target_compile_features(KEngineCore PUBLIC cxx_std_20) 
