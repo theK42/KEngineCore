@@ -111,6 +111,7 @@ size_t KEngineCore::StringTable::AddString(std::string_view string)
 			return mNumStrings++;
 		}
 	}
+
 	if (mUnusedStrings <= 0)
 	{
 		size_t newSize = mNumStrings * 2;
@@ -119,6 +120,7 @@ size_t KEngineCore::StringTable::AddString(std::string_view string)
 	}
 	if (mUnusedSize < string.length())
 	{
+		assert(mSize > 0);
 		size_t newSize = mSize * 2;
 		while (newSize + mUnusedSize < string.length())
 		{

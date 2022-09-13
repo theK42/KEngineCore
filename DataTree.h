@@ -34,6 +34,12 @@ namespace KEngineCore
 		int GetStringIndex(StringHash id) const;
 		int GetHashIndex(StringHash id) const;
 
+		int GetNumInts() const;
+		int GetNumFloats() const;
+		int GetNumBools() const;
+		int GetNumStrings() const;
+		int GetNumHashes() const;
+
 		StringTable* GetStringTable() const;
 		StringHash TabulateStringHash(StringHash hash);
 
