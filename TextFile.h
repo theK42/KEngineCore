@@ -13,7 +13,7 @@ namespace KEngineCore
     class TextFile
     {
     public:
-        void LoadFromFile(const std::string& filename, const std::string& extension);
+        void LoadFromFile(const std::string_view& filename, const std::string_view& extension);
         const std::string& GetContents() const;
     private:
         std::string mFileContents;

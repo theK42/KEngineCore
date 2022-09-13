@@ -6,9 +6,6 @@
 
 KEngineCore::StringHash::StringHash()
 {
-#ifndef NDEBUG
-	string = nullptr;
-#endif
 	hash = 0;
 }
 

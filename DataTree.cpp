@@ -202,7 +202,7 @@ void ReadIndexMap(KEngineCore::IndexMap& map, std::istream& stream, KEngineCore:
 	{
 		KEngineCore::StringHash key = ReadHash(stream, strings);
 		int value = 0;
-		stream.read((char*)value, sizeof(value));
+		stream.read((char*)&value, sizeof(value));
 		map.emplace(key, value);
 	}
 }
@@ -224,6 +224,12 @@ void KEngineCore::DataTreeHeader::WriteToStream(std::ostream& stream) const
 
 void KEngineCore::DataTreeHeader::ReadFromStream(std::istream& stream)
 {
+	stream.read((char*)&mOwnsStringTable, sizeof(mOwnsStringTable));
+	if (mOwnsStringTable)
+	{
+		mStringTable = new StringTable();
+		mStringTable->ReadFromStream(stream);
+	}
 	ReadIndexMap(mIntMap, stream, mStringTable);
 	ReadIndexMap(mFloatMap, stream, mStringTable);
 	ReadIndexMap(mBoolMap, stream, mStringTable);
@@ -602,39 +608,48 @@ void KEngineCore::DataTree::ReadFromStream(std::istream& stream, StringTable * s
 
 	size_t size = 0;
 
-	stream.read((char*)size, sizeof(size));
+	stream.read((char*)&size, sizeof(size));
 	mInts.resize(size);
 	stream.read((char*)mInts.data(), size * sizeof(mInts[0]));
+	
 
-	stream.read((char*)size, sizeof(size));
-	mFloats.resize(size);
-	stream.read((char*)mFloats.data(), size * sizeof(mFloats[0]));
+	stream.read((char*)&size, sizeof(size));
+	if (size) {
+		mFloats.resize(size);
+		stream.read((char*)mFloats.data(), size * sizeof(mFloats[0]));
+	}
 
-	stream.read((char*)size, sizeof(size));
-	mBitFields.resize(size);
-	stream.read((char*)mBitFields.data(), size * sizeof(mBitFields[0]));
+	stream.read((char*)&size, sizeof(size));
+	if (size) {
+		mBitFields.resize(size);
+		stream.read((char*)mBitFields.data(), size * sizeof(mBitFields[0]));
+	}
 
-	stream.read((char*)size, sizeof(size));
-	mStringIndices.resize(size);
-	stream.read((char*)mStringIndices.data(), size * sizeof(mStringIndices[0]));
+	stream.read((char*)&size, sizeof(size));
+	if (size) {
+		mStringIndices.resize(size);
+		stream.read((char*)mStringIndices.data(), size * sizeof(mStringIndices[0]));
+	}
 
-	stream.read((char*)size, sizeof(size));
-	mHashes.resize(size);
-	for (auto& hash : mHashes)
-	{
-		hash = ReadHash(stream, mHeader->GetStringTable());
+	stream.read((char*)&size, sizeof(size));
+	if (size) {
+		mHashes.resize(size);
+		for (auto& hash : mHashes)
+		{
+			hash = ReadHash(stream, mHeader->GetStringTable());
+		}
 	}
 
 	ReadIndexMap(mKeyMap, stream, mHeader->GetStringTable());
 
-	stream.read((char*)size, sizeof(size));
+	stream.read((char*)&size, sizeof(size));
 	mBranchMaps.resize(size);
 	for (auto& map : mBranchMaps)
 	{
 		ReadIndexMap(map, stream, mHeader->GetStringTable());
 	}
 
-	stream.read((char*)size, sizeof(size));
+	stream.read((char*)&size, sizeof(size));
 	mBranches.resize(size);
 	for (auto& branch : mBranches)
 	{

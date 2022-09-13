@@ -3,12 +3,14 @@
 #include <fstream>
 
 
-void KEngineCore::TextFile::LoadFromFile(const std::string& filename, const std::string& extension)
+void KEngineCore::TextFile::LoadFromFile(const std::string_view& filename, const std::string_view& extension)
 {
 	std::ifstream inFile;
-	inFile.open(filename + extension, std::ifstream::in | std::ifstream::binary);
+	std::string fullFilename(filename);
+	fullFilename = fullFilename.append(extension);
+	inFile.open(fullFilename, std::ifstream::in | std::ifstream::binary);
 	if (!inFile) {
-		std::cerr << "Unable to open file " + filename + extension;
+		std::cerr << "Unable to open file " << filename << extension;
 		exit(1);   // call system to stop
 	}
 
