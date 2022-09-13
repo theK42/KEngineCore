@@ -5,8 +5,9 @@
 namespace KEngineCore
 {
 	class StringTable;
-	class StringTableBuilder;
 
+
+	typedef std::map<StringHash, int> IndexMap;
 	class DataTreeHeader
 	{
 	public:
@@ -32,24 +33,30 @@ namespace KEngineCore
 		int GetBoolIndex(StringHash id) const;
 		int GetStringIndex(StringHash id) const;
 		int GetHashIndex(StringHash id) const;
+
+		StringTable* GetStringTable() const;
+		StringHash TabulateStringHash(StringHash hash);
+
 		int GetKeyIndex(StringHash id) const;
 
 
 		bool IsKey(StringHash id) const;  //IsKey reports whether a Hash is being used as a key by the root
 		int GetNumKeys() const ;
 		StringHash GetKey(int index) const;
+
+
+		void WriteToStream(std::ostream& stream) const;
+		void ReadFromStream(std::istream& stream);
+
 	protected:
-		typedef std::map<StringHash, int> IndexMap;
 		IndexMap	mIntMap;
 		IndexMap	mFloatMap;
 		IndexMap	mBoolMap;
 		IndexMap	mStringMap;
 		IndexMap	mHashMap;
-		IndexMap	mKeyMap;
-#ifndef DELETE_STRINGS
-		StringTable* mStringTable;
-#endif
-
+		
+		StringTable*	mStringTable;
+		bool			mOwnsStringTable;
 	};
 
 	class DataTree
@@ -57,6 +64,9 @@ namespace KEngineCore
 	public:
 		DataTree();
 		~DataTree();
+
+		void Init(DataTreeHeader* header);
+		void Deinit();
 
 		bool HasInt(StringHash id) const;
 		int GetInt(StringHash id) const;
@@ -82,14 +92,14 @@ namespace KEngineCore
 
 		const std::vector<DataTree*>& GetBranches() const;
 
+		void WriteToStream(std::ostream& stream) const;
+		void ReadFromStream(std::istream& stream, StringTable* strings = nullptr);
+
 	protected:
 
 		DataTreeHeader*				mHeader{ nullptr };
 		bool						mOwnsHeader{ false };
 		DataTreeHeader*				mBranchHeader{ nullptr };
-
-		StringTableBuilder*			mStringTable{ nullptr };
-		bool						mOwnsStringTable{ false };
 
 		std::vector<int>			mInts;
 		std::vector<float>			mFloats;
@@ -98,7 +108,6 @@ namespace KEngineCore
 		std::vector<StringHash>		mHashes;
 		std::vector<DataTree*>		mBranches;
 
-		typedef std::map<StringHash, int> IndexMap;
 		IndexMap					mKeyMap;
 		std::vector<IndexMap>		mBranchMaps;
 	};
@@ -109,7 +118,7 @@ namespace KEngineCore
 		DataSapling();
 		~DataSapling();
 
-		void Init(DataSapling* root, DataTreeHeader* header, StringTableBuilder* stringTable);
+		void Init(DataSapling* root, DataTreeHeader* header, StringTable * strings);
 		void Deinit();
 
 		void SetInt(StringHash id, int value);
@@ -143,7 +152,6 @@ namespace KEngineCore
 		template<typename T, typename ... Targs>
 		void GrowBranchInternal(DataSapling* branch, std::pair<KEngineCore::StringHash, T> v1, Targs ... args);
 		void GrowBranchInternal(DataSapling* branch) {};//Recursive base case, do nothing;
-		StringHash TabulateStringHash(StringHash hash);
 		
 
 		DataSapling *			mRoot;
@@ -169,7 +177,7 @@ namespace KEngineCore
 	DataSapling * DataSapling::GrowBranch(std::pair<KEngineCore::StringHash, T>v1, Targs ... args)
 	{
 		DataSapling* branch = new DataSapling();
-		branch->Init(this, mBranchHeader, mStringTable);
+		branch->Init(this, mBranchHeader, mHeader->GetStringTable());
 		branch->Set(v1.first, v1.second);
 		GrowBranchInternal(branch, args...);
 		int branchIndex = (int)mBranches.size();

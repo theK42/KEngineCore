@@ -1,4 +1,6 @@
 #include "StringTable.h"
+#include "BinaryFile.h"
+#include <iostream>
 #include <assert.h>
 
 KEngineCore::StringTable::StringTable()
@@ -8,6 +10,37 @@ KEngineCore::StringTable::StringTable()
 KEngineCore::StringTable::~StringTable()
 {
 	Deinit();
+}
+
+void KEngineCore::StringTable::Init(size_t startingSize, size_t startingIndices, size_t maxSize, size_t maxIndices)
+{
+	assert(mStringData == nullptr);
+	mSize = 0;
+	mNumStrings = 0;
+	mStringData = new char[startingSize];
+	mUnusedSize = startingSize;
+	mUnusedStrings = startingIndices;
+	mStartIndices = new size_t[startingIndices];
+	mEndIndices = new size_t[startingIndices];
+	mMaxSize = maxSize;
+	mMaxNumStrings = maxIndices;
+}
+
+void KEngineCore::StringTable::Deinit()
+{
+	if (mStringData != nullptr) {
+		mUnusedSize = 0;
+		mMaxSize = 0;
+		mMaxNumStrings = 0;
+		mSize = 0;
+		mNumStrings = 0;
+		delete[] mStringData;
+		delete[] mStartIndices;
+		delete[] mEndIndices;
+		mStartIndices = nullptr;
+		mEndIndices = nullptr;
+		mStringData = nullptr;
+	}
 }
 
 void KEngineCore::StringTable::Init(size_t size, size_t numStrings, size_t* startIndices, size_t* endIndices, char* stringData)
@@ -20,16 +53,6 @@ void KEngineCore::StringTable::Init(size_t size, size_t numStrings, size_t* star
 	mStringData = stringData;
 }
 
-void KEngineCore::StringTable::Deinit()
-{
-	//Currently, StringTable does not own its memory, so just set pointers to null
-	mSize = 0;
-	mNumStrings = 0;
-	mStartIndices = nullptr;
-	mEndIndices = nullptr;
-	mStringData = nullptr;
-}
-
 std::string_view KEngineCore::StringTable::GetString(size_t index)
 {
 	assert(index >= 0 && index < mNumStrings);
@@ -39,38 +62,30 @@ std::string_view KEngineCore::StringTable::GetString(size_t index)
 	return std::string_view(mStringData + startIndex, length);
 }
 
-KEngineCore::StringTableBuilder::StringTableBuilder()
+
+void KEngineCore::StringTable::WriteToStream(std::ostream& stream) const
 {
+	stream.write((char*)&mSize, sizeof(mSize));
+	stream.write((char*)&mNumStrings, sizeof(mNumStrings));
+	stream.write((char*)mStartIndices, sizeof(size_t) * mNumStrings);
+	stream.write((char*)mEndIndices, sizeof(size_t) * mNumStrings);
+	stream.write((char*)mStringData, sizeof(char) * mSize);
 }
 
-KEngineCore::StringTableBuilder::~StringTableBuilder()
+void KEngineCore::StringTable::ReadFromStream(std::istream& stream)
 {
-	Deinit();
+	assert(mStringData == nullptr);
+	stream.read((char*)&mSize, sizeof(mSize));
+	stream.read((char*)&mNumStrings, sizeof(mNumStrings));
+	mStartIndices = new size_t[mNumStrings];
+	stream.read((char*)mStartIndices, sizeof(size_t) * mNumStrings);
+	mEndIndices = new size_t[mNumStrings];
+	stream.read((char*)mEndIndices, sizeof(size_t) * mNumStrings);
+	mStringData = new char[mSize];
+	stream.read((char*)mStringData, sizeof(char) * mSize);
 }
 
-void KEngineCore::StringTableBuilder::Init(size_t startingSize, size_t startingIndices, size_t maxSize, size_t maxIndices)
-{
-	mStringData = new char[startingSize];
-	mUnusedSize = startingSize;
-	mUnusedStrings = startingIndices;
-	mStartIndices = new size_t[startingIndices];
-	mEndIndices = new size_t[startingIndices];
-	mMaxSize = maxSize;
-	mMaxNumStrings = maxIndices;
-}
-
-void KEngineCore::StringTableBuilder::Deinit()
-{	
-	mUnusedSize = 0;
-	mMaxSize = 0;
-	mMaxNumStrings = 0;
-	delete[] mStringData;
-	delete[] mStartIndices;
-	delete[] mEndIndices;
-	StringTable::Deinit();
-}
-
-size_t KEngineCore::StringTableBuilder::AddString(std::string_view string)
+size_t KEngineCore::StringTable::AddString(std::string_view string)
 {
 	//Check for substring matches
 	for (size_t stringIndex = 0; stringIndex < mNumStrings; stringIndex++ )
@@ -122,7 +137,7 @@ size_t KEngineCore::StringTableBuilder::AddString(std::string_view string)
 	return mNumStrings++;
 }
 
-void KEngineCore::StringTableBuilder::ResizeStringData(size_t newSize)
+void KEngineCore::StringTable::ResizeStringData(size_t newSize)
 {
 	assert(newSize < mMaxSize);
 	char* newData = new char[newSize];
@@ -132,7 +147,7 @@ void KEngineCore::StringTableBuilder::ResizeStringData(size_t newSize)
 	mUnusedSize = newSize - mSize;
 }
 
-void KEngineCore::StringTableBuilder::ResizeIndexData(size_t newSize)
+void KEngineCore::StringTable::ResizeIndexData(size_t newSize)
 {
 	assert(newSize < mMaxNumStrings);
 	size_t* newBeginnings = new size_t[newSize];

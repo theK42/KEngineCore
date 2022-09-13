@@ -1,6 +1,7 @@
 #include "DataTree.h"
 #include "StringTable.h"
 #include <assert.h>
+#include <iostream>
 
 KEngineCore::DataTreeHeader::DataTreeHeader()
 {
@@ -10,11 +11,18 @@ KEngineCore::DataTreeHeader::~DataTreeHeader()
 {
 }
 
-void KEngineCore::DataTreeHeader::Init(StringTable* stringtable)
+void KEngineCore::DataTreeHeader::Init(StringTable* stringTable)
 {
-#ifndef DELETE_STRINGS
-	mStringTable = stringtable;
-#endif
+	if (stringTable != nullptr)
+	{
+		mStringTable = stringTable;
+		mOwnsStringTable = false;
+	}
+	else
+	{
+		mStringTable = new StringTable();
+		mOwnsStringTable = true;
+	}
 }
 
 void KEngineCore::DataTreeHeader::Deinit()
@@ -24,32 +32,42 @@ void KEngineCore::DataTreeHeader::Deinit()
 	mBoolMap.clear();
 	mStringMap.clear();
 	mHashMap.clear();
-	mKeyMap.clear();
+
+	if (mOwnsStringTable)
+	{
+		delete mStringTable;
+		mStringTable = nullptr;
+		mOwnsStringTable = false;
+	}
 }
 
 void KEngineCore::DataTreeHeader::AddInt(StringHash id)
 {
-
+	id = TabulateStringHash(id);
 	mIntMap[id] = (int)mIntMap.size();
 }
 
 void KEngineCore::DataTreeHeader::AddFloat(StringHash id)
 {
+	id = TabulateStringHash(id);
 	mIntMap[id] = (int)mFloatMap.size();
 }
 
 void KEngineCore::DataTreeHeader::AddBool(StringHash id)
 {
+	id = TabulateStringHash(id);
 	mIntMap[id] = (int)mBoolMap.size();
 }
 
 void KEngineCore::DataTreeHeader::AddString(StringHash id)
 {
+	id = TabulateStringHash(id);
 	mIntMap[id] = (int)mStringMap.size();
 }
 
 void KEngineCore::DataTreeHeader::AddHash(StringHash id)
 {
+	id = TabulateStringHash(id);
 	mHashMap[id] = (int)mHashMap.size();
 }
 
@@ -103,6 +121,90 @@ int KEngineCore::DataTreeHeader::GetHashIndex(StringHash id) const
 	return mHashMap.find(id)->second;
 }
 
+KEngineCore::StringTable* KEngineCore::DataTreeHeader::GetStringTable() const
+{
+	return mStringTable;
+}
+
+
+void WriteHash(KEngineCore::StringHash hash, std::ostream& stream)
+{
+	stream.write((char*)&hash.hash, sizeof(hash.hash));
+#ifndef DELETE_STRINGS
+	stream.write((char*)&hash.tableIndex, sizeof(hash.tableIndex));
+#else
+	int none = -1;
+	stream.write((char*)&none, sizeof(int));
+#endif
+}
+
+
+KEngineCore::StringHash ReadHash(std::istream& stream, KEngineCore::StringTable* strings)
+{
+	KEngineCore::StringHash hash;
+	stream.read((char*)&hash.hash, sizeof(hash.hash));
+#ifndef DELETE_STRINGS
+	stream.read((char*)&hash.tableIndex, sizeof(hash.tableIndex));
+	if (hash.tableIndex >= 0)
+	{
+		hash.string = strings->GetString(hash.tableIndex);
+	}
+#else
+	int discard = -1;
+	stream.read((char*)& discard, sizeof(int));
+#endif
+	return hash;
+}
+
+void WriteIndexMap(const KEngineCore::IndexMap& map, std::ostream& stream)
+{
+	size_t tempSize;
+	tempSize = map.size();
+	stream.write((char*)&tempSize, sizeof(tempSize));
+	for (auto pair : map)
+	{
+		WriteHash(pair.first, stream);
+		stream.write((char*)&pair.second, sizeof(pair.second));
+	}
+}
+
+void ReadIndexMap(KEngineCore::IndexMap& map, std::istream& stream, KEngineCore::StringTable* strings)
+{
+	size_t tempSize;
+	stream.read((char*)&tempSize, sizeof(tempSize));
+	for (size_t i = 0; i < tempSize; i++)
+	{
+		KEngineCore::StringHash key = ReadHash(stream, strings);
+		int value = 0;
+		stream.read((char*)value, sizeof(value));
+		map.emplace(key, value);
+	}
+}
+
+
+void KEngineCore::DataTreeHeader::WriteToStream(std::ostream& stream) const
+{
+	stream.write((char*)&mOwnsStringTable, sizeof(mOwnsStringTable));
+	if (mOwnsStringTable)
+	{
+		mStringTable->WriteToStream(stream);
+	}
+	WriteIndexMap(mIntMap, stream);
+	WriteIndexMap(mFloatMap, stream);
+	WriteIndexMap(mBoolMap, stream);
+	WriteIndexMap(mStringMap, stream);
+	WriteIndexMap(mHashMap, stream);
+}
+
+void KEngineCore::DataTreeHeader::ReadFromStream(std::istream& stream)
+{
+	ReadIndexMap(mIntMap, stream, mStringTable);
+	ReadIndexMap(mFloatMap, stream, mStringTable);
+	ReadIndexMap(mBoolMap, stream, mStringTable);
+	ReadIndexMap(mStringMap, stream, mStringTable);
+	ReadIndexMap(mHashMap, stream, mStringTable);
+}
+
 
 
 
@@ -116,26 +218,14 @@ KEngineCore::DataSapling::~DataSapling()
 	Deinit();
 }
 
-void KEngineCore::DataSapling::Init(DataSapling* root, DataTreeHeader* header, StringTableBuilder* stringTable)
+void KEngineCore::DataSapling::Init(DataSapling* root, DataTreeHeader* header, StringTable* stringTable)
 {
 	mRoot = root;
-
-	if (stringTable == nullptr)
-	{
-		mStringTable = new StringTableBuilder();
-		mStringTable->Init();
-		mOwnsStringTable = true;
-	}
-	else
-	{
-		mStringTable = stringTable;
-		mOwnsStringTable = false;
-	}
 
 	if (header == nullptr)
 	{
 		mHeader = new DataTreeHeader();
-		mHeader->Init(mStringTable);
+		mHeader->Init(stringTable);
 		mOwnsHeader = true;
 	}
 	else
@@ -163,22 +253,18 @@ void KEngineCore::DataSapling::Deinit()
 	
 	if (mOwnsHeader)
 	{
+		printf("deleting a header");
 		delete mHeader;
 		mHeader = nullptr;
 		mOwnsHeader = false;
 	}
 
-	if (mOwnsStringTable)
-	{
-		delete mStringTable;
-		mStringTable = nullptr;
-		mOwnsStringTable = false;
-	}
+
 }
 
 void KEngineCore::DataSapling::SetInt(StringHash id, int value)
 {
-	id = TabulateStringHash(id);
+	id = mHeader->TabulateStringHash(id);
 	if (mOwnsHeader && !HasInt(id))
 	{
 		mHeader->AddInt(id);
@@ -195,7 +281,7 @@ void KEngineCore::DataSapling::SetInt(StringHash id, int value)
 
 void KEngineCore::DataSapling::SetFloat(StringHash id, float value)
 {
-	id = TabulateStringHash(id);
+	id = mHeader->TabulateStringHash(id);
 	if (mOwnsHeader && !HasFloat(id))
 	{
 		mHeader->AddFloat(id);
@@ -212,7 +298,7 @@ void KEngineCore::DataSapling::SetFloat(StringHash id, float value)
 
 void KEngineCore::DataSapling::SetBool(StringHash id, bool value)
 {
-	id = TabulateStringHash(id);
+	id = mHeader->TabulateStringHash(id);
 	if (mOwnsHeader && !HasBool(id))
 	{
 		mHeader->AddBool(id);
@@ -231,8 +317,8 @@ void KEngineCore::DataSapling::SetBool(StringHash id, bool value)
 
 void KEngineCore::DataSapling::SetString(StringHash id, std::string_view value)
 {
-	id = TabulateStringHash(id);
-	size_t stringIndex = mStringTable->AddString(value);
+	id = mHeader->TabulateStringHash(id);
+	size_t stringIndex = mHeader->GetStringTable()->AddString(value);
 	if (mOwnsHeader && !HasString(id))
 	{
 		mHeader->AddString(id);
@@ -249,8 +335,8 @@ void KEngineCore::DataSapling::SetString(StringHash id, std::string_view value)
 
 void KEngineCore::DataSapling::SetHash(StringHash id, StringHash value)
 {
-	id = TabulateStringHash(id);
-	value = TabulateStringHash(value);
+	id = mHeader->TabulateStringHash(id);
+	value = mHeader->TabulateStringHash(value);
 	if (mOwnsHeader && !HasHash(id))
 	{
 		mHeader->AddHash(id);
@@ -269,7 +355,7 @@ KEngineCore::DataTreeHeader* KEngineCore::DataSapling::CreateBranchHeader()
 {
 	assert(mBranchHeader == nullptr);
 	mBranchHeader = new DataTreeHeader();
-	mBranchHeader->Init(mStringTable);
+	mBranchHeader->Init(mHeader->GetStringTable());
 	return mBranchHeader;
 }
 
@@ -283,7 +369,7 @@ void KEngineCore::DataSapling::AddKey(StringHash id)
 KEngineCore::DataSapling* KEngineCore::DataSapling::GrowBranch()
 {
 	auto* branch = new DataSapling();
-	branch->Init(this, mBranchHeader, mStringTable);
+	branch->Init(this, mBranchHeader, mHeader->GetStringTable());
 	mBranches.push_back(branch);
 	return branch;
 }
@@ -295,7 +381,7 @@ void KEngineCore::DataSapling::BranchReady(DataSapling* branch)
 	{
 		if (branch->HasHash(keyPair.first))
 		{
-			mBranchMaps[keyPair.second][branch->GetHash(keyPair.first)] = mBranches.size() - 1;
+			mBranchMaps[keyPair.second][branch->GetHash(keyPair.first)] = (int)mBranches.size() - 1;
 		}
 	}
 }
@@ -305,6 +391,18 @@ KEngineCore::DataTree::DataTree()
 }
 
 KEngineCore::DataTree::~DataTree()
+{
+	Deinit();
+}
+
+void KEngineCore::DataTree::Init(DataTreeHeader* header)
+{
+	assert(mHeader == nullptr);
+	mHeader = header;
+	mOwnsHeader = false;
+}
+
+void KEngineCore::DataTree::Deinit()
 {
 	for (auto* branch : mBranches)
 	{
@@ -318,12 +416,8 @@ KEngineCore::DataTree::~DataTree()
 
 	if (mOwnsHeader)
 	{
+		printf("deleting a header also");
 		delete mHeader;
-	}
-
-	if (mOwnsStringTable)
-	{
-		delete mStringTable;
 	}
 }
 
@@ -373,7 +467,7 @@ std::string_view KEngineCore::DataTree::GetString(StringHash id) const
 {
 	assert(HasString(id));
 	size_t tableIndex =  mStringIndices[mHeader->GetStringIndex(id)];
-	return mStringTable->GetString(tableIndex);
+	return mHeader->GetStringTable()->GetString(tableIndex);
 }
 
 bool KEngineCore::DataTree::HasHash(StringHash id) const
@@ -392,9 +486,138 @@ const std::vector<KEngineCore::DataTree*>& KEngineCore::DataTree::GetBranches() 
 	return mBranches;
 }
 
+void KEngineCore::DataTree::WriteToStream(std::ostream& stream) const
+{
+	stream.write((char*)&mOwnsHeader, sizeof(mOwnsHeader));
+	if (mOwnsHeader)
+	{
+		mHeader->WriteToStream(stream);
+	}
+	if (mBranchHeader != nullptr)
+	{
+		bool truth = true;
+		stream.write((char*)&truth, sizeof(truth));
+		mBranchHeader->WriteToStream(stream);
+	}
+	else
+	{
+		bool falsehood = false;
+		stream.write((char*)&falsehood, sizeof(falsehood));
+	}
+
+	size_t size;
+	
+	size = mInts.size();
+	stream.write((char*)&size, sizeof(size));
+	stream.write((char*)mInts.data(), size * sizeof(mInts[0]));
+
+	size = mFloats.size();
+	stream.write((char*)&size, sizeof(size));
+	stream.write((char*)mFloats.data(), size * sizeof(mFloats[0]));
+
+	size = mBitFields.size();
+	stream.write((char*)&size, sizeof(size));
+	stream.write((char*)mBitFields.data(), size * sizeof(mBitFields[0]));
+
+	size = mStringIndices.size();
+	stream.write((char*)&size, sizeof(size));
+	stream.write((char*)mStringIndices.data(), size * sizeof(mStringIndices[0]));
+
+	size = mHashes.size();
+	stream.write((char*)&size, sizeof(size));
+	for (auto hash : mHashes)
+	{
+		WriteHash(hash, stream);
+	}
+	
+	WriteIndexMap(mKeyMap, stream);
+
+	size = mBranchMaps.size();
+	stream.write((char*)&size, sizeof(size));
+	for (auto& map : mBranchMaps)
+	{
+		WriteIndexMap(map, stream);
+	}
+
+	size = mBranches.size();
+	stream.write((char*)&size, sizeof(size));
+	for (auto branch : mBranches)
+	{
+		branch->WriteToStream(stream);
+	}
+}
+
+void KEngineCore::DataTree::ReadFromStream(std::istream& stream, StringTable * strings)
+{
+	stream.read((char*)&mOwnsHeader, sizeof(mOwnsHeader));
+	if (mOwnsHeader)
+	{
+		mHeader = new DataTreeHeader();
+		if (strings != nullptr)
+		{
+			mHeader->Init(strings);
+		}
+		mHeader->ReadFromStream(stream);
+	}
+	bool hasBranchHeader;
+	stream.read((char*)&hasBranchHeader, sizeof(hasBranchHeader));
+	if (hasBranchHeader)
+	{
+		mBranchHeader = new DataTreeHeader();
+		mBranchHeader->Init(mHeader->GetStringTable());
+		mBranchHeader->ReadFromStream(stream);
+	}
+
+	size_t size;
+
+	stream.read((char*)size, sizeof(size));
+	mInts.resize(size);
+	stream.read((char*)mInts.data(), size * sizeof(mInts[0]));
+
+	stream.read((char*)size, sizeof(size));
+	mFloats.resize(size);
+	stream.read((char*)mFloats.data(), size * sizeof(mFloats[0]));
+
+	stream.read((char*)size, sizeof(size));
+	mBitFields.resize(size);
+	stream.read((char*)mBitFields.data(), size * sizeof(mBitFields[0]));
+
+	stream.read((char*)size, sizeof(size));
+	mStringIndices.resize(size);
+	stream.read((char*)mStringIndices.data(), size * sizeof(mStringIndices[0]));
+
+	stream.read((char*)size, sizeof(size));
+	mHashes.resize(size);
+	for (auto& hash : mHashes)
+	{
+		hash = ReadHash(stream, mHeader->GetStringTable());
+	}
+
+	ReadIndexMap(mKeyMap, stream, mHeader->GetStringTable());
+
+	stream.read((char*)size, sizeof(size));
+	mBranchMaps.resize(size);
+	for (auto& map : mBranchMaps)
+	{
+		ReadIndexMap(map, stream, mHeader->GetStringTable());
+	}
+
+	stream.read((char*)size, sizeof(size));
+	mBranches.resize(size);
+	for (auto& branch : mBranches)
+	{
+		branch = new DataTree();
+		if (mBranchHeader != nullptr)
+		{
+			branch->Init(mBranchHeader);  //Okay this...isn't quite right.
+		}
+		branch->ReadFromStream(stream, mHeader->GetStringTable());
+	}
+}
+
 int KEngineCore::DataTree::GetNumBranches() const
 {
-	return mBranches.size();
+	return (int)mBranches.size();
 }
 
 KEngineCore::DataTree* KEngineCore::DataTree::GetBranch(int index) const
@@ -425,11 +648,11 @@ KEngineCore::DataTree* KEngineCore::DataTree::GetBranch(StringHash key, StringHa
 }
 
 
-KEngineCore::StringHash KEngineCore::DataSapling::TabulateStringHash(StringHash hash)
+KEngineCore::StringHash KEngineCore::DataTreeHeader::TabulateStringHash(StringHash hash)
 {
 #ifndef DELETE_STRINGS
 	size_t stringIndex = mStringTable->AddString(hash.string);
-	return StringHash(mStringTable->GetString(stringIndex), hash);
+	return StringHash(mStringTable->GetString(stringIndex), hash); 
 #else
 	return hash;
 #endif

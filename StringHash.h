@@ -10,11 +10,14 @@ struct StringHash
 {
 	StringHash();
 	StringHash(StringHash const & other);
-	StringHash(char const * string, unsigned int hash);
-	StringHash(char const * string);
-    unsigned int hash {0};
+    StringHash(std::string_view string, unsigned int hash);
+    StringHash(std::string_view string, unsigned int hash, int tableIndex);
+    StringHash(std::string_view string);
+    StringHash(const char* c_string);
+    unsigned int hash{ 0 };
 #ifndef DELETE_STRINGS
-    char const * string {nullptr};
+    std::string_view    string;
+    int                 tableIndex{ -1 };
 #endif
 	constexpr inline operator unsigned int(void) const { return hash; }
 };
