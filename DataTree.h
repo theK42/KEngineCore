@@ -76,18 +76,28 @@ namespace KEngineCore
 
 		bool HasInt(StringHash id) const;
 		int GetInt(StringHash id) const;
+		int GetInt(int index) const;
+		int GetNumInts()const;
 
 		bool HasFloat(StringHash id) const;
 		float GetFloat(StringHash id) const;
+		float GetFloat(int index) const;
+		int GetNumFloats()const;
 
 		bool HasBool(StringHash id) const;
 		bool GetBool(StringHash id) const;
+		bool GetBool(int index) const;
+		int GetNumBools()const;
 
 		bool HasString(StringHash id) const;
 		std::string_view GetString(StringHash id) const;
+		std::string_view GetString(int index) const;
+		int GetNumStrings()const;
 
 		bool HasHash(StringHash id) const;
 		StringHash GetHash(StringHash id) const;
+		StringHash GetHash(int index) const;
+		int GetNumHashes()const;
 
 		bool HasKey(StringHash id) const;
 

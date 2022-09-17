@@ -124,27 +124,27 @@ int KEngineCore::DataTreeHeader::GetHashIndex(StringHash id) const
 
 int KEngineCore::DataTreeHeader::GetNumInts() const
 {
-	return mIntMap.size();
+	return (int)mIntMap.size();
 }
 
 int KEngineCore::DataTreeHeader::GetNumFloats() const
 {
-	return mFloatMap.size();
+	return (int)mFloatMap.size();
 }
 
 int KEngineCore::DataTreeHeader::GetNumBools() const
 {
-	return mBoolMap.size();
+	return (int)mBoolMap.size();
 }
 
 int KEngineCore::DataTreeHeader::GetNumStrings() const
 {
-	return mStringMap.size();
+	return (int)mStringMap.size();
 }
 
 int KEngineCore::DataTreeHeader::GetNumHashes() const
 {
-	return mHashMap.size();
+	return (int)mHashMap.size();
 }
 
 KEngineCore::StringTable* KEngineCore::DataTreeHeader::GetStringTable() const
@@ -470,6 +470,16 @@ int KEngineCore::DataTree::GetInt(StringHash id) const
 	return mInts[mHeader->GetIntIndex(id)];
 }
 
+int KEngineCore::DataTree::GetInt(int index) const
+{
+	return mInts[index];
+}
+
+int KEngineCore::DataTree::GetNumInts() const
+{
+	return (int)mInts.size();
+}
+
 bool KEngineCore::DataTree::HasFloat(StringHash id) const
 {
 	return mHeader->HasFloat(id);
@@ -479,6 +489,16 @@ float KEngineCore::DataTree::GetFloat(StringHash id) const
 {
 	assert(HasFloat(id));
 	return mFloats[mHeader->GetFloatIndex(id)];
+}
+
+float KEngineCore::DataTree::GetFloat(int index) const
+{
+	return mFloats[index];
+}
+
+int KEngineCore::DataTree::GetNumFloats() const
+{
+	return (int)mFloats.size();
 }
 
 bool KEngineCore::DataTree::HasBool(StringHash id) const
@@ -495,6 +515,17 @@ bool KEngineCore::DataTree::GetBool(StringHash id) const
 	return mBitFields[interBitFieldIndex] & 1 << intraBitFieldIndex;
 }
 
+bool KEngineCore::DataTree::GetBool(int index) const
+{
+	int interBitFieldIndex = index / 8;
+	int intraBitFieldIndex = index % 8;
+	return mBitFields[interBitFieldIndex] & 1 << intraBitFieldIndex;
+}
+
+int KEngineCore::DataTree::GetNumBools() const
+{
+	return (int)mBitFields.size() * 8;
+}
 
 bool KEngineCore::DataTree::HasString(StringHash id) const
 {
@@ -508,6 +539,17 @@ std::string_view KEngineCore::DataTree::GetString(StringHash id) const
 	return mHeader->GetStringTable()->GetString(tableIndex);
 }
 
+std::string_view KEngineCore::DataTree::GetString(int index) const
+{
+	size_t tableIndex = mStringIndices[index];
+	return mHeader->GetStringTable()->GetString(tableIndex);
+}
+
+int KEngineCore::DataTree::GetNumStrings() const
+{
+	return (int)mStringIndices.size();
+}
+
 bool KEngineCore::DataTree::HasHash(StringHash id) const
 {
 	return mHeader->HasHash(id);
@@ -517,6 +559,16 @@ KEngineCore::StringHash KEngineCore::DataTree::GetHash(StringHash id) const
 {
 	assert(HasHash(id));
 	return mHashes[mHeader->GetHashIndex(id)];
+}
+
+KEngineCore::StringHash KEngineCore::DataTree::GetHash(int index) const
+{
+	return mHashes[index];
+}
+
+int KEngineCore::DataTree::GetNumHashes() const
+{
+	return (int)mHashes.size();
 }
 
 const std::vector<KEngineCore::DataTree*>& KEngineCore::DataTree::GetBranches() const
