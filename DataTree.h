@@ -138,10 +138,15 @@ namespace KEngineCore
 		void Deinit();
 
 		void SetInt(StringHash id, int value);
+		void AddInt(int value);
 		void SetFloat(StringHash id, float value);
+		void AddFloat(float value);
 		void SetBool(StringHash id, bool value);
+		void AddBool(bool value);
 		void SetString(StringHash id, std::string_view value);  //caution:  May leave cruft in the string table.
-		void SetHash(StringHash id, StringHash value); 
+		void AddString(std::string_view value);
+		void SetHash(StringHash id, StringHash value);
+		void AddHash(StringHash value);
 
 		template<typename T>
 		void Set(StringHash id, T value);

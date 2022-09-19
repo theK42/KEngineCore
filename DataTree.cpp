@@ -313,6 +313,11 @@ void KEngineCore::DataSapling::SetInt(StringHash id, int value)
 	}
 }
 
+void KEngineCore::DataSapling::AddInt(int value)
+{
+	mInts.push_back(value);
+}
+
 void KEngineCore::DataSapling::SetFloat(StringHash id, float value)
 {
 	id = mHeader->TabulateStringHash(id);
@@ -328,6 +333,11 @@ void KEngineCore::DataSapling::SetFloat(StringHash id, float value)
 		int index = mHeader->GetFloatIndex(id);
 		mFloats[index] = value;
 	}
+}
+
+void KEngineCore::DataSapling::AddFloat(float value)
+{
+	mFloats.push_back(value);
 }
 
 void KEngineCore::DataSapling::SetBool(StringHash id, bool value)
@@ -349,6 +359,11 @@ void KEngineCore::DataSapling::SetBool(StringHash id, bool value)
 	mBitFields[interBitFieldIndex] = value ? (mBitFields[interBitFieldIndex] | (1 << intraBitFieldIndex)) : (mBitFields[interBitFieldIndex] & ~(1 << intraBitFieldIndex));
 }
 
+void KEngineCore::DataSapling::AddBool(bool value)
+{
+	assert(false);//I have no idea how to support this at this time, why are you trying to do it?
+}
+
 void KEngineCore::DataSapling::SetString(StringHash id, std::string_view value)
 {
 	id = mHeader->TabulateStringHash(id);
@@ -366,6 +381,11 @@ void KEngineCore::DataSapling::SetString(StringHash id, std::string_view value)
 	}
 }
 
+void KEngineCore::DataSapling::AddString(std::string_view value)
+{
+	int index = (int)mHeader->GetStringTable()->AddString(value);
+	mStringIndices.push_back(index);
+}
 
 void KEngineCore::DataSapling::SetHash(StringHash id, StringHash value)
 {
@@ -383,6 +403,12 @@ void KEngineCore::DataSapling::SetHash(StringHash id, StringHash value)
 		int index = mHeader->GetHashIndex(id);
 		mHashes[index] = value;
 	}
+}
+
+void KEngineCore::DataSapling::AddHash(StringHash value)
+{
+	value = mHeader->TabulateStringHash(value);
+	mHashes.push_back(value);
 }
 
 KEngineCore::DataTreeHeader* KEngineCore::DataSapling::CreateBranchHeader()
