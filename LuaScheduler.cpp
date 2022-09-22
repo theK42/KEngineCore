@@ -288,7 +288,7 @@ void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, lua_State *
 	scheduler->ScheduleThread(this, run);
 }
 
-void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, char const * fileName, bool run)
+void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, std::string_view fileName, bool run)
 {
 	lua_State * mainState = scheduler->GetMainState();
 	lua_State * thread = lua_newthread(mainState);
@@ -318,7 +318,10 @@ void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, char const 
 				assert(0);
 		break;
 	}*/
-	scheduler->LoadScript(thread, fileName);
+
+	std::string fileNameCopy(fileName);
+
+	scheduler->LoadScript(thread, fileNameCopy.c_str());
 	Init(scheduler, thread, run);
 }
 

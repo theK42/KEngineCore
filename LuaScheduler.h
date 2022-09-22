@@ -66,7 +66,7 @@ public:
 	~ScheduledLuaThread();
 	
 	void Init(LuaScheduler * scheduler, lua_State * thread, bool run = false);
-	void Init(LuaScheduler * scheduler, char const * scriptPath, bool run = false);
+	void Init(LuaScheduler * scheduler, std::string_view scriptPath, bool run = false);
 	template<typename T, typename ... Targs>
 	int AddParameters(T t, Targs ... args); //Recursive variadic template
 	int AddParameters() { return 0; }; //No-op base case for recursive definition of variadic template
