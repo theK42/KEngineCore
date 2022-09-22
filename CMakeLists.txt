@@ -6,6 +6,8 @@ project(KEngineCore)
 add_library(KEngineCore STATIC 
 BinaryFile.h
 BinaryFile.cpp
+Disposable.h
+Disposable.cpp
 List.h
 LuaLibrary.h
 LuaLibrary.cpp

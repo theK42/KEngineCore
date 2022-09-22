@@ -20,6 +20,7 @@ namespace KEngineCore
 
 		T* GetItem();
 		void ReleaseItem(T* item);
+		void Clear();
 
 	private:
 		void Resize(int newSize);
@@ -55,6 +56,12 @@ namespace KEngineCore
 	void Pool<T>::Deinit()
 	{
 		assert(mFreeList.size() == mPoolSize);
+		Clear();
+	}
+
+	template <typename T>
+	void Pool<T>::Clear()
+	{
 		mFreeList.clear();
 		for (auto pool : mPools)
 		{
