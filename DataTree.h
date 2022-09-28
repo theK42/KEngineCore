@@ -148,19 +148,9 @@ namespace KEngineCore
 		void SetHash(StringHash id, StringHash value);
 		void AddHash(StringHash value);
 
-		template<typename T>
-		void Set(StringHash id, T value);
-
 		DataTreeHeader* CreateBranchHeader();
 
 		void AddKey(StringHash id);
-
-		//DataSapling* GetBranch(int index) const;
-		//DataSapling* GetBranch(StringHash key, StringHash id) const;
-
-
-		template<typename T, typename ... Targs>
-		DataSapling* GrowBranch(std::pair<KEngineCore::StringHash, T>, Targs ... args); //Recursive variadic template
 		DataSapling* GrowBranch();
 		void BranchReady(DataSapling * branch);
 
@@ -170,9 +160,6 @@ namespace KEngineCore
 		void RebuildStringTable(); //May only be called by the root and owner of the string table.
 
 	protected:
-		template<typename T, typename ... Targs>
-		void GrowBranchInternal(DataSapling* branch, std::pair<KEngineCore::StringHash, T> v1, Targs ... args);
-		void GrowBranchInternal(DataSapling* branch) {};//Recursive base case, do nothing;
 		
 
 		DataSapling *			mRoot;
@@ -180,45 +167,5 @@ namespace KEngineCore
 
 		std::vector<DataSapling*>	mSaplingBranches;
 	};
-
-
-	template<typename T>
-	void DataSapling::Set(StringHash id, T value)
-	{
-		static_assert(false, "Unsupported type Set on DataTree");
-	}
-
-	template<>
-	inline void DataSapling::Set<StringHash>(StringHash id, StringHash value)
-	{
-		SetHash(id, value);
-	}
-
-	template<typename T, typename ... Targs>
-	DataSapling * DataSapling::GrowBranch(std::pair<KEngineCore::StringHash, T>v1, Targs ... args)
-	{
-		DataSapling* branch = new DataSapling();
-		branch->Init(this, mBranchHeader, mHeader->GetStringTable());
-		branch->Set(v1.first, v1.second);
-		GrowBranchInternal(branch, args...);
-		int branchIndex = (int)mBranches.size();
-		mBranches.push_back(branch);
-		mSaplingBranches.push_back(branch);
-		for (auto keyPair : mKeyMap)
-		{
-			auto keyVal = branch->GetHash(keyPair.first);
-			mBranchMaps[keyPair.second][keyVal] = branchIndex;
-		}
-		return branch;
-	}
-
-	template<typename T, typename ... Targs>
-	void DataSapling::GrowBranchInternal(DataSapling* branch, std::pair<KEngineCore::StringHash, T>v1, Targs ... args)
-	{
-		branch->Set(v1.first, v1.second);
-		GrowBranchInternal(branch, args...);
-	}
-	
-#define LEAF(key, value) (std::pair(key, value))
 
 }
