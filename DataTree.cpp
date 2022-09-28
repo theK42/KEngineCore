@@ -765,9 +765,11 @@ bool KEngineCore::DataTree::HasBranch(StringHash key, StringHash id) const
 KEngineCore::DataTree* KEngineCore::DataTree::GetBranch(StringHash key, StringHash id) const
 {
 	auto keyIt = mKeyMap.find(key);
+	assert(keyIt != mKeyMap.end());
 	int branchMapIdx = keyIt->second;
 	const IndexMap& branchMap = mBranchMaps[branchMapIdx];
 	auto branchIt = branchMap.find(id);
+	assert(branchIt != branchMap.end());
 	int branchIdx = branchIt->second;
 	return mBranches[branchIdx];
 }
