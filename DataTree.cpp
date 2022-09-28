@@ -51,13 +51,13 @@ void KEngineCore::DataTreeHeader::AddInt(StringHash id)
 void KEngineCore::DataTreeHeader::AddFloat(StringHash id)
 {
 	id = TabulateStringHash(id);
-	mIntMap[id] = (int)mFloatMap.size();
+	mFloatMap[id] = (int)mFloatMap.size();
 }
 
 void KEngineCore::DataTreeHeader::AddBool(StringHash id)
 {
 	id = TabulateStringHash(id);
-	mIntMap[id] = (int)mBoolMap.size();
+	mBoolMap[id] = (int)mBoolMap.size();
 }
 
 void KEngineCore::DataTreeHeader::AddString(StringHash id)
