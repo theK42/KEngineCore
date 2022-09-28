@@ -25,6 +25,8 @@ Updater.cpp
 Lua.hpp
 DataTree.h
 DataTree.cpp
+Psychopomp.h
+Psychopomp.cpp
 StringTable.h
 StringTable.cpp
 )
