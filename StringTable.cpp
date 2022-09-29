@@ -2,6 +2,7 @@
 #include "BinaryFile.h"
 #include <iostream>
 #include <assert.h>
+#include <string.h>
 
 KEngineCore::StringTable::StringTable()
 {
@@ -132,7 +133,7 @@ size_t KEngineCore::StringTable::AddString(std::string_view string)
 	}
 	mStartIndices[mNumStrings] = mSize;
 	mEndIndices[mNumStrings] = mSize + string.length();
-	strncpy_s(mStringData + mStartIndices[mNumStrings], mUnusedSize, string.data(), string.length());
+	strncpy(mStringData + mStartIndices[mNumStrings], string.data(), std::min(string.length(), mUnusedSize));
 	mSize += string.length();
 	mUnusedSize -= string.length();
 	mUnusedStrings--;

@@ -1,5 +1,6 @@
 #include "StringHash.h"
 #include <map>
+#include <vector>
 
 #pragma once
 namespace KEngineCore

@@ -72,7 +72,7 @@ T * LuaWrapping<T>::Unwrap(lua_State * luaState, int index) {
 
 
 template <typename T, const char* S>
-static void LuaLibrary::CreateGCMetaTableForClass(lua_State* luaState)
+void LuaLibrary::CreateGCMetaTableForClass(lua_State* luaState)
 {
 	auto destroy = [](lua_State* luaState) {
 		T* binding = (T*)luaL_checkudata(luaState, 1, S);

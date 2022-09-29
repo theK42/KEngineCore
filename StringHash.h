@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <string_view>
 
 #ifdef NDEBUG   
     #define DELETE_STRINGS

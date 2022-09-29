@@ -27,7 +27,7 @@ void KEngineCore::LuaLibrary::PreloadLibraryIntoTable(lua_State * luaState, char
 }
 
 
-static int localRequire(lua_State * luaState) {
+int localRequire(lua_State * luaState) {
 	luaL_checktype(luaState, 1, LUA_TSTRING);
 	lua_checkstack(luaState, 2);
 	lua_pushvalue(luaState, 1);
