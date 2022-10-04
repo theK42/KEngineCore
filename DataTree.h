@@ -121,7 +121,7 @@ namespace KEngineCore
 		std::vector<int>			mInts;
 		std::vector<float>			mFloats;
 		std::vector<uint8_t>		mBitFields;
-		std::vector<size_t>			mStringIndices;
+		std::vector<int64_t>			mStringIndices;
 		std::vector<StringHash>		mHashes;
 		std::vector<DataTree*>		mBranches;
 

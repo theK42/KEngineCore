@@ -8,12 +8,12 @@ namespace KEngineCore {
 	public:
 		StringTable();
 		~StringTable();
-		void Init(size_t size, size_t numStrings, size_t* startIndices, size_t* endIndices, char* stringData);
-		void Init(size_t startingSize = 256, size_t startingIndices = 16, size_t maxSize = SIZE_MAX, size_t maxIndices = SIZE_MAX);
+		void Init(int64_t size, int64_t numStrings, int64_t* startIndices, int64_t* endIndices, char* stringData);
+		void Init(int64_t startingSize = 256, int64_t startingIndices = 16, int64_t maxSize = SIZE_MAX, int64_t maxIndices = SIZE_MAX);
 		void Deinit();
 
-		size_t AddString(std::string_view string);
-		std::string_view GetString(size_t index);
+		int64_t AddString(std::string_view string);
+		std::string_view GetString(int64_t index);
 
 
 		void WriteToStream(std::ostream& stream) const;
@@ -22,17 +22,17 @@ namespace KEngineCore {
 
 	protected:		
 		
-		void ResizeStringData(size_t newSize);
-		void ResizeIndexData(size_t newSize);
+		void ResizeStringData(int64_t newSize);
+		void ResizeIndexData(int64_t newSize);
 
-		size_t	mUnusedSize{ 0 };
-		size_t	mMaxSize{ 0 };
-		size_t	mUnusedStrings{ 0 };
-		size_t	mMaxNumStrings{ 0 };
-		size_t	mSize{ 0 };
-		size_t	mNumStrings{ 0 };
-		size_t*	mStartIndices{ nullptr };
-		size_t*	mEndIndices{ nullptr };
+		int64_t	mUnusedSize{ 0 };
+		int64_t	mMaxSize{ 0 };
+		int64_t	mUnusedStrings{ 0 };
+		int64_t	mMaxNumStrings{ 0 };
+		int64_t	mSize{ 0 };
+		int64_t	mNumStrings{ 0 };
+		int64_t*	mStartIndices{ nullptr };
+		int64_t*	mEndIndices{ nullptr };
 		char*	mStringData{ nullptr };
 	};
 }

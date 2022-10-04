@@ -194,10 +194,21 @@ void WriteIndexMap(const KEngineCore::IndexMap& map, std::ostream& stream)
 	}
 }
 
+void Remove32Bits(std::istream& stream)
+{
+    size_t tempSize;
+    if (sizeof(size_t) == sizeof(int))
+    {
+        stream.read((char*)&tempSize, sizeof(tempSize));
+    }
+}
+
 void ReadIndexMap(KEngineCore::IndexMap& map, std::istream& stream, KEngineCore::StringTable* strings)
 {
-	size_t tempSize;
-	stream.read((char*)&tempSize, sizeof(tempSize));
+
+    size_t tempSize;
+    stream.read((char*)&tempSize, sizeof(tempSize));
+    Remove32Bits(stream);
 	for (size_t i = 0; i < tempSize; i++)
 	{
 		KEngineCore::StringHash key = ReadHash(stream, strings);
@@ -235,6 +246,7 @@ void KEngineCore::DataTreeHeader::ReadFromStream(std::istream& stream)
 	ReadIndexMap(mBoolMap, stream, mStringTable);
 	ReadIndexMap(mStringMap, stream, mStringTable);
 	ReadIndexMap(mHashMap, stream, mStringTable);
+    
 }
 
 
@@ -665,6 +677,7 @@ void KEngineCore::DataTree::WriteToStream(std::ostream& stream) const
 
 void KEngineCore::DataTree::ReadFromStream(std::istream& stream, StringTable * strings)
 {
+    
 	stream.read((char*)&mOwnsHeader, sizeof(mOwnsHeader));
 	if (mOwnsHeader)
 	{
@@ -675,6 +688,7 @@ void KEngineCore::DataTree::ReadFromStream(std::istream& stream, StringTable * s
 		}
 		mHeader->ReadFromStream(stream);
 	}
+    
 	bool hasBranchHeader;
 	stream.read((char*)&hasBranchHeader, sizeof(hasBranchHeader));
 	if (hasBranchHeader)
@@ -683,33 +697,34 @@ void KEngineCore::DataTree::ReadFromStream(std::istream& stream, StringTable * s
 		mBranchHeader->Init(mHeader->GetStringTable());
 		mBranchHeader->ReadFromStream(stream);
 	}
-
+    
 	size_t size = 0;
-
 	stream.read((char*)&size, sizeof(size));
+    Remove32Bits(stream);
 	mInts.resize(size);
 	stream.read((char*)mInts.data(), size * sizeof(mInts[0]));
-	
-
+    
 	stream.read((char*)&size, sizeof(size));
+    Remove32Bits(stream);
 	if (size) {
 		mFloats.resize(size);
 		stream.read((char*)mFloats.data(), size * sizeof(mFloats[0]));
 	}
-
+    
 	stream.read((char*)&size, sizeof(size));
+    Remove32Bits(stream);
 	if (size) {
 		mBitFields.resize(size);
 		stream.read((char*)mBitFields.data(), size * sizeof(mBitFields[0]));
 	}
-
 	stream.read((char*)&size, sizeof(size));
+    Remove32Bits(stream);
 	if (size) {
 		mStringIndices.resize(size);
 		stream.read((char*)mStringIndices.data(), size * sizeof(mStringIndices[0]));
 	}
-
 	stream.read((char*)&size, sizeof(size));
+    Remove32Bits(stream);
 	if (size) {
 		mHashes.resize(size);
 		for (auto& hash : mHashes)
@@ -717,17 +732,17 @@ void KEngineCore::DataTree::ReadFromStream(std::istream& stream, StringTable * s
 			hash = ReadHash(stream, mHeader->GetStringTable());
 		}
 	}
-
+    
 	ReadIndexMap(mKeyMap, stream, mHeader->GetStringTable());
-
 	stream.read((char*)&size, sizeof(size));
+    Remove32Bits(stream);
 	mBranchMaps.resize(size);
 	for (auto& map : mBranchMaps)
 	{
 		ReadIndexMap(map, stream, mHeader->GetStringTable());
 	}
-
 	stream.read((char*)&size, sizeof(size));
+    Remove32Bits(stream);
 	mBranches.resize(size);
 	for (auto& branch : mBranches)
 	{
@@ -738,6 +753,7 @@ void KEngineCore::DataTree::ReadFromStream(std::istream& stream, StringTable * s
 		}
 		branch->ReadFromStream(stream, mHeader->GetStringTable());
 	}
+    
 }
 
 int KEngineCore::DataTree::GetNumBranches() const

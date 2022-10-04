@@ -13,7 +13,7 @@ KEngineCore::StringTable::~StringTable()
 	Deinit();
 }
 
-void KEngineCore::StringTable::Init(size_t startingSize, size_t startingIndices, size_t maxSize, size_t maxIndices)
+void KEngineCore::StringTable::Init(int64_t startingSize, int64_t startingIndices, int64_t maxSize, int64_t maxIndices)
 {
 	assert(mStringData == nullptr);
 	mSize = 0;
@@ -21,8 +21,8 @@ void KEngineCore::StringTable::Init(size_t startingSize, size_t startingIndices,
 	mStringData = new char[startingSize];
 	mUnusedSize = startingSize;
 	mUnusedStrings = startingIndices;
-	mStartIndices = new size_t[startingIndices];
-	mEndIndices = new size_t[startingIndices];
+	mStartIndices = new int64_t[startingIndices];
+	mEndIndices = new int64_t[startingIndices];
 	mMaxSize = maxSize;
 	mMaxNumStrings = maxIndices;
 }
@@ -44,7 +44,7 @@ void KEngineCore::StringTable::Deinit()
 	}
 }
 
-void KEngineCore::StringTable::Init(size_t size, size_t numStrings, size_t* startIndices, size_t* endIndices, char* stringData)
+void KEngineCore::StringTable::Init(int64_t size, int64_t numStrings, int64_t* startIndices, int64_t* endIndices, char* stringData)
 {
 	assert(mSize == 0);
 	mSize = size;
@@ -54,12 +54,12 @@ void KEngineCore::StringTable::Init(size_t size, size_t numStrings, size_t* star
 	mStringData = stringData;
 }
 
-std::string_view KEngineCore::StringTable::GetString(size_t index)
+std::string_view KEngineCore::StringTable::GetString(int64_t index)
 {
 	assert(index >= 0 && index < mNumStrings);
-	size_t startIndex = mStartIndices[index];
-	size_t endIndex = mEndIndices[index];
-	size_t length = endIndex - startIndex;
+	int64_t startIndex = mStartIndices[index];
+	int64_t endIndex = mEndIndices[index];
+	int64_t length = endIndex - startIndex;
 	return std::string_view(mStringData + startIndex, length);
 }
 
@@ -68,8 +68,8 @@ void KEngineCore::StringTable::WriteToStream(std::ostream& stream) const
 {
 	stream.write((char*)&mSize, sizeof(mSize));
 	stream.write((char*)&mNumStrings, sizeof(mNumStrings));
-	stream.write((char*)mStartIndices, sizeof(size_t) * mNumStrings);
-	stream.write((char*)mEndIndices, sizeof(size_t) * mNumStrings);
+	stream.write((char*)mStartIndices, sizeof(int64_t) * mNumStrings);
+	stream.write((char*)mEndIndices, sizeof(int64_t) * mNumStrings);
 	stream.write((char*)mStringData, sizeof(char) * mSize);
 }
 
@@ -78,30 +78,31 @@ void KEngineCore::StringTable::ReadFromStream(std::istream& stream)
 	assert(mStringData == nullptr);
 	stream.read((char*)&mSize, sizeof(mSize));
 	stream.read((char*)&mNumStrings, sizeof(mNumStrings));
-	mStartIndices = new size_t[mNumStrings];
-	stream.read((char*)mStartIndices, sizeof(size_t) * mNumStrings);
-	mEndIndices = new size_t[mNumStrings];
-	stream.read((char*)mEndIndices, sizeof(size_t) * mNumStrings);
+	mStartIndices = new int64_t[mNumStrings];
+	stream.read((char*)mStartIndices, sizeof(int64_t) * mNumStrings);
+	mEndIndices = new int64_t[mNumStrings];
+	stream.read((char*)mEndIndices, sizeof(int64_t) * mNumStrings);
 	mStringData = new char[mSize];
 	stream.read((char*)mStringData, sizeof(char) * mSize);
+    
 }
 
-size_t KEngineCore::StringTable::AddString(std::string_view string)
+int64_t KEngineCore::StringTable::AddString(std::string_view string)
 {
 	//Check for substring matches
-	for (size_t stringIndex = 0; stringIndex < mNumStrings; stringIndex++ )
+	for (int64_t stringIndex = 0; stringIndex < mNumStrings; stringIndex++ )
 	{
 		auto other = GetString(stringIndex);
 		if (other == string)
 		{
 			return stringIndex;
 		}
-		size_t position = other.find(string);
+		int64_t position = other.find(string);
 		if (position != -1)
 		{
 			if (mUnusedStrings <= 0)
 			{
-				size_t newSize = mNumStrings * 2;
+				int64_t newSize = mNumStrings * 2;
 				newSize = std::min(newSize, mMaxNumStrings);
 				ResizeIndexData(newSize);
 			}
@@ -115,14 +116,14 @@ size_t KEngineCore::StringTable::AddString(std::string_view string)
 
 	if (mUnusedStrings <= 0)
 	{
-		size_t newSize = mNumStrings * 2;
+		int64_t newSize = mNumStrings * 2;
 		newSize = std::min(newSize, mMaxNumStrings);
 		ResizeIndexData(newSize);
 	}
 	if (mUnusedSize < string.length())
 	{
 		assert(mSize > 0);
-		size_t newSize = mSize * 2;
+		int64_t newSize = mSize * 2;
 		while (newSize + mUnusedSize < string.length())
 		{
 			newSize *= 2;
@@ -133,14 +134,14 @@ size_t KEngineCore::StringTable::AddString(std::string_view string)
 	}
 	mStartIndices[mNumStrings] = mSize;
 	mEndIndices[mNumStrings] = mSize + string.length();
-	strncpy(mStringData + mStartIndices[mNumStrings], string.data(), std::min(string.length(), mUnusedSize));
+	strncpy(mStringData + mStartIndices[mNumStrings], string.data(), std::min(string.length(), (size_t)mUnusedSize));
 	mSize += string.length();
 	mUnusedSize -= string.length();
 	mUnusedStrings--;
 	return mNumStrings++;
 }
 
-void KEngineCore::StringTable::ResizeStringData(size_t newSize)
+void KEngineCore::StringTable::ResizeStringData(int64_t newSize)
 {
 	assert(newSize < mMaxSize);
 	char* newData = new char[newSize];
@@ -150,11 +151,11 @@ void KEngineCore::StringTable::ResizeStringData(size_t newSize)
 	mUnusedSize = newSize - mSize;
 }
 
-void KEngineCore::StringTable::ResizeIndexData(size_t newSize)
+void KEngineCore::StringTable::ResizeIndexData(int64_t newSize)
 {
 	assert(newSize < mMaxNumStrings);
-	size_t* newBeginnings = new size_t[newSize];
-	size_t* newEndings = new size_t[newSize];
+	int64_t* newBeginnings = new int64_t[newSize];
+	int64_t* newEndings = new int64_t[newSize];
 	memcpy(newBeginnings, mStartIndices, mNumStrings);
 	memcpy(newEndings, mEndIndices, mNumStrings);
 	delete[] mStartIndices;
