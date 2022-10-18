@@ -12,7 +12,12 @@ namespace KEngineCore
 	{
 	public:
 
-		ListElement() {}
+		ListElement() {
+			for (int i = 0; i < N; i++)
+			{
+				mNext[i] = mPrev[i] = nullptr;
+			}
+		}
 
 		template< int M >
 		ListElement* GetNext() const;
@@ -140,6 +145,12 @@ namespace KEngineCore
 	template< typename T, int M, int N >
 	inline void List< T, M, N >::Clear()
 	{
+		auto prev = mHead.GetPrev<M>();
+		auto next = mHead.GetNext<M>();
+
+		prev->SetNext<M>(next);
+		next->SetPrev<M>(prev);
+
 		mHead.template SetNext<M>(&mHead);
 		mHead.template SetPrev<M>(&mHead);
 	}
@@ -149,7 +160,8 @@ namespace KEngineCore
 	template< typename T, int M, int N >
 	inline List< T, M, N >::List()
 	{
-		Clear();
+		mHead.template SetNext<M>(&mHead);
+		mHead.template SetPrev<M>(&mHead);
 	}
 
 	///------------------------------------------------------------------------
