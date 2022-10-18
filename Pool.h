@@ -62,13 +62,13 @@ namespace KEngineCore
 	template <typename T>
 	void Pool<T>::Clear()
 	{
-		mFreeList.clear();
 		for (auto pool : mPools)
 		{
 			delete[] pool;
 		}
 		mPools.clear();
 		mPoolSize = 0;
+		mFreeList.clear();
 	}
 
 	template <typename T>
