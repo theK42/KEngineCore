@@ -124,13 +124,15 @@ int64_t KEngineCore::StringTable::AddString(std::string_view string)
 	{
 		assert(mSize > 0);
 		int64_t newSize = mSize * 2;
-		while (newSize + mUnusedSize < string.length())
+		while (newSize - (mSize - mUnusedSize) < string.length())
 		{
 			newSize *= 2;
 		}
-		newSize = std::min(newSize, mMaxSize);
+		if (mMaxSize > 0) {
+			newSize = std::min(newSize, mMaxSize);
+		}
 		assert(newSize + mUnusedSize >= string.length());
-		ResizeIndexData(newSize);
+		ResizeStringData(newSize);
 	}
 	mStartIndices[mNumStrings] = mSize;
 	mEndIndices[mNumStrings] = mSize + string.length();
