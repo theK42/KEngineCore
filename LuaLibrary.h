@@ -21,6 +21,9 @@ public:
 	template <typename T, const char* S>
 	static void CreateGCMetaTableForClass(lua_State* luaState);
 
+	template <typename T, const char* S>
+	static void CreateEmptyMetaTableForClass(lua_State* luaState);
+
 };
 
 
@@ -32,15 +35,15 @@ public:
 	~LuaWrapping() {Deinit();}
 	void Init(const char * metaTableName) { mMetaTableName = metaTableName; }
 	void Deinit() { mMetaTableName = nullptr; }
-	void WrapAndPush(lua_State * luaState, int index); 
-	T * Unwrap(lua_State * luaState, int index);
+	void WrapAndPush(lua_State * luaState, int index) const ; 
+	T * Unwrap(lua_State * luaState, int index) const;
 	char const * GetMetaTableName() const { return mMetaTableName; }
 private:
 	char const * mMetaTableName;
 };
 
 template <typename T>
-void LuaWrapping<T>::WrapAndPush(lua_State * luaState, int index) {
+void LuaWrapping<T>::WrapAndPush(lua_State * luaState, int index) const {
 	lua_checkstack(luaState, 2);
 	if (!lua_islightuserdata(luaState, index)) {
 		luaL_argerror(luaState, index, "Light Userdata required.");
@@ -56,7 +59,7 @@ void LuaWrapping<T>::WrapAndPush(lua_State * luaState, int index) {
 }
 
 template <typename T>
-T * LuaWrapping<T>::Unwrap(lua_State * luaState, int index) {
+T * LuaWrapping<T>::Unwrap(lua_State * luaState, int index) const {
 	assert(mMetaTableName != nullptr);
 	T * pointer;
 	if (lua_islightuserdata(luaState, index)) {
@@ -88,5 +91,12 @@ void LuaLibrary::CreateGCMetaTableForClass(lua_State* luaState)
 	lua_pop(luaState, 1);
 }
 
+template <typename T, const char* S>
+void LuaLibrary::CreateEmptyMetaTableForClass(lua_State* luaState)
+{
+	lua_checkstack(luaState, 1);
+	luaL_newmetatable(luaState, S);
+	lua_pop(luaState, 1);
+}
 
 }
