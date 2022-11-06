@@ -78,19 +78,19 @@ void KEngineCore::LuaScheduler::LoadScript(lua_State * thread, char const * scri
 		switch (val) {
 		case LUA_ERRSYNTAX: ///syntax error during pre-compilation;			
 			string = lua_tostring(mMainState, -1);
-			fprintf(stderr, "Syntax Error: %s", string);
+			fprintf(stderr, "Syntax Error: %s\n", string);
 			lua_pop(mMainState, 1);
 			assert(0);
 			break;
 		case LUA_ERRMEM: //memory allocation error.
 			string = lua_tostring(mMainState, -1);
-			fprintf(stderr, "Memory Error: %s", string);
+			fprintf(stderr, "Memory Error: %s\n", string);
 			lua_pop(mMainState, 1);
 			assert(0);
 			break;
 		case LUA_ERRFILE: //Couldn't load file
 			string = lua_tostring(mMainState, -1);
-			fprintf(stderr, "File Load Error: %s", string);
+			fprintf(stderr, "File Load Error: %s\n", string);
 			lua_pop(mMainState, 1);
 			assert(0);
 			break;
