@@ -29,6 +29,8 @@ Psychopomp.h
 Psychopomp.cpp
 StringTable.h
 StringTable.cpp
+Tweening.h
+Tweening.cpp
 )
 
 target_compile_features(KEngineCore PUBLIC cxx_std_20) 
