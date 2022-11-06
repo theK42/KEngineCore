@@ -145,8 +145,8 @@ namespace KEngineCore
 	template< typename T, int M, int N >
 	inline void List< T, M, N >::Clear()
 	{
-		auto prev = mHead.GetPrev<M>();
-		auto next = mHead.GetNext<M>();
+		auto prev = mHead.template GetPrev<M>();
+		auto next = mHead.template GetNext<M>();
 
 		prev->SetNext<M>(next);
 		next->SetPrev<M>(prev);
