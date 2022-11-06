@@ -148,8 +148,8 @@ namespace KEngineCore
 		auto prev = mHead.template GetPrev<M>();
 		auto next = mHead.template GetNext<M>();
 
-		prev->SetNext<M>(next);
-		next->SetPrev<M>(prev);
+		prev->template SetNext<M>(next);
+		next->template SetPrev<M>(prev);
 
 		mHead.template SetNext<M>(&mHead);
 		mHead.template SetPrev<M>(&mHead);
