@@ -103,7 +103,10 @@ int64_t KEngineCore::StringTable::AddString(std::string_view string)
 			if (mUnusedStrings <= 0)
 			{
 				int64_t newSize = mNumStrings * 2;
-				newSize = std::min(newSize, mMaxNumStrings);
+				if (mMaxNumStrings > 0)
+				{
+					newSize = std::min(newSize, mMaxNumStrings);
+				}
 				ResizeIndexData(newSize);
 			}
 			mUnusedStrings--;
@@ -117,7 +120,10 @@ int64_t KEngineCore::StringTable::AddString(std::string_view string)
 	if (mUnusedStrings <= 0)
 	{
 		int64_t newSize = mNumStrings * 2;
-		newSize = std::min(newSize, mMaxNumStrings);
+		if (mMaxNumStrings > 0)
+		{
+			newSize = std::min(newSize, mMaxNumStrings);
+		}
 		ResizeIndexData(newSize);
 	}
 	if (mUnusedSize < string.length())
@@ -158,8 +164,8 @@ void KEngineCore::StringTable::ResizeIndexData(int64_t newSize)
 	assert(newSize < mMaxNumStrings);
 	int64_t* newBeginnings = new int64_t[newSize];
 	int64_t* newEndings = new int64_t[newSize];
-	memcpy(newBeginnings, mStartIndices, mNumStrings);
-	memcpy(newEndings, mEndIndices, mNumStrings);
+	memcpy(newBeginnings, mStartIndices, mNumStrings * sizeof(int64_t));
+	memcpy(newEndings, mEndIndices, mNumStrings * sizeof(int64_t));
 	delete[] mStartIndices;
 	delete[] mEndIndices;
 	mStartIndices = newBeginnings;
