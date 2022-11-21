@@ -14,6 +14,7 @@ KEngineCore::StringHash::StringHash(StringHash const & other)
 {
 #ifndef DELETE_STRINGS
 	string = other.string;
+	tableIndex = other.tableIndex;
 #endif
 	hash = other.hash;
 }

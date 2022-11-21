@@ -791,11 +791,11 @@ KEngineCore::DataTree* KEngineCore::DataTree::GetBranch(StringHash key, StringHa
 }
 
 
-KEngineCore::StringHash KEngineCore::DataTreeHeader::TabulateStringHash(StringHash hash)
+KEngineCore::StringHash KEngineCore::DataTreeHeader::TabulateStringHash(StringHash& hash)
 {
 #ifndef DELETE_STRINGS
 	size_t stringIndex = mStringTable->AddString(hash.string);
-	return StringHash(mStringTable->GetString(stringIndex), hash); 
+	return StringHash(mStringTable->GetString(stringIndex), hash, stringIndex); 
 #else
 	return hash;
 #endif

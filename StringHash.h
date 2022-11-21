@@ -2,10 +2,6 @@
 #include <functional>
 #include <string_view>
 
-#ifdef NDEBUG   
-    #define DELETE_STRINGS
-#endif
-
 namespace KEngineCore {
 struct StringHash
 {

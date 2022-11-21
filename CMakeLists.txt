@@ -40,3 +40,13 @@ set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(lua-cmake)
 target_link_libraries(KEngineCore PUBLIC Boost::boost lua::header)
 target_link_libraries(KEngineCore PRIVATE lua::lib)
+
+option(KENGINE_CORE_DELETE_STRINGS_RELEASE "Delete strings from hashes in release builds" ON)
+
+if (KENGINE_CORE_DELETE_STRINGS_RELEASE)
+    target_compile_definitions(KEngineCore PRIVATE
+        $<$<CONFIG:Release>:
+            DELETE_STRINGS
+        >
+    )
+endif()

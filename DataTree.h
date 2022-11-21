@@ -42,7 +42,7 @@ namespace KEngineCore
 		int GetNumHashes() const;
 
 		StringTable* GetStringTable() const;
-		StringHash TabulateStringHash(StringHash hash);
+		StringHash TabulateStringHash(StringHash& hash);
 
 		int GetKeyIndex(StringHash id) const;
 
