@@ -89,6 +89,7 @@ namespace KEngineCore
 		void		InsertBefore(T* item, ListElement<T, N>* pAnchor);
 		void		InsertAfter(T* item, ListElement<T, N>* pAnchor);
 		void		Remove(T* item);
+		void		RemoveIfPresent(T* item);
 
 		void		PushFront(T* item);
 		void		PushBack(T* item);
@@ -226,8 +227,24 @@ namespace KEngineCore
 
 		prev->template SetNext<M>(next);
 		next->template SetPrev<M>(prev);
-		item->template SetNext<M>(item);
-		item->template SetPrev<M>(item);
+		item->template SetNext<M>(nullptr);
+		item->template SetPrev<M>(nullptr);
+	}
+
+	///------------------------------------------------------------------------
+
+	template< typename T, int M, int N >
+	inline void List< T, M, N >::RemoveIfPresent(T* item)
+	{
+		ListElement<T, N>* prev = item->template GetPrev<M>();
+		ListElement<T, N>* next = item->template GetNext<M>();
+		if (prev != nullptr && prev->template GetNext<M>() == item && next != nullptr && next->template GetPrev<M>() == item)
+		{
+			prev->template SetNext<M>(next);
+			next->template SetPrev<M>(prev);
+			item->template SetNext<M>(nullptr);
+			item->template SetPrev<M>(nullptr);
+		}
 	}
 
 	///------------------------------------------------------------------------

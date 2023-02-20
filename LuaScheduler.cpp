@@ -128,12 +128,9 @@ void KEngineCore::LuaScheduler::KillThread(ScheduledLuaThread * thread) {
 	thread->SetRegistryIndex(LUA_REFNIL);
 	luaL_unref(mMainState, LUA_REGISTRYINDEX, threadRef);
 	
-	if(thread->GetNext<0>())
-		mRunningThreads.Remove(thread);
-	if (thread->GetNext<1>())
-		mPausingThreads.Remove(thread);
-	if (thread->GetNext<2>())
-		mResumingThreads.Remove(thread);
+	mRunningThreads.RemoveIfPresent(thread);
+	mPausingThreads.RemoveIfPresent(thread);
+	mResumingThreads.RemoveIfPresent(thread);
 
 	mAllThreads.erase(thread->mThreadState);
 }
