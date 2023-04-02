@@ -138,9 +138,6 @@ void KEngineCore::LuaScheduler::KillThread(ScheduledLuaThread * thread) {
 void KEngineCore::LuaScheduler::Update() {
 	std::vector<ScheduledLuaThread *> deadThreads;
 	
-	auto iterator = mPausingThreads.begin();
-
-
 	for (ScheduledLuaThread * thread : mPausingThreads)
 	{
 		mRunningThreads.Remove(thread);
