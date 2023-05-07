@@ -65,8 +65,8 @@ public:
 	ScheduledLuaThread();
 	~ScheduledLuaThread();
 	
-	void Init(LuaScheduler * scheduler, lua_State * thread, bool run = false);
-	void Init(LuaScheduler * scheduler, std::string_view scriptPath, bool run = false);
+	void Init(LuaScheduler * scheduler, lua_State * thread, int params = 0, bool run = false);
+	void Init(LuaScheduler * scheduler, std::string_view scriptPath, int params = 0, bool run = false);
 	template<typename T, typename ... Targs>
 	int AddParameters(T t, Targs ... args); //Recursive variadic template
 	int AddParameters() { return 0; }; //No-op base case for recursive definition of variadic template
@@ -83,13 +83,20 @@ public:
 	LuaScheduler * GetLuaScheduler() const;
 
 	lua_State * GetThreadState() const;
+
+	void SetCleanupCallback(std::function<void()> callback);
+	void ClearCleanupCallback();
+
 private:
 
+	void Cleanup();
 
 	LuaScheduler *								mScheduler {nullptr};
 	lua_State *									mThreadState {nullptr};
 	int											mRegistryIndex {-1};
-	int											mReturnValues {-1};
+	int											mValues {-1}; //Return values...or parameters.  Or both.
+
+	std::function<void()>						mCleanupCallback;
 
 	friend class LuaScheduler;
 };

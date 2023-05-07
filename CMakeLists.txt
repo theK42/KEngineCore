@@ -9,6 +9,8 @@ BinaryFile.cpp
 Disposable.h
 Disposable.cpp
 List.h
+LuaContext.h
+LuaContext.cpp
 LuaLibrary.h
 LuaLibrary.cpp
 LuaScheduler.h

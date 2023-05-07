@@ -125,14 +125,15 @@ void KEngineCore::LuaScheduler::KillThread(ScheduledLuaThread * thread) {
 	lua_settable(mMainState, LUA_REGISTRYINDEX);
 
 	int threadRef = thread->GetRegistryIndex();
-	thread->SetRegistryIndex(LUA_REFNIL);
-	luaL_unref(mMainState, LUA_REGISTRYINDEX, threadRef);
 	
 	mRunningThreads.RemoveIfPresent(thread);
 	mPausingThreads.RemoveIfPresent(thread);
 	mResumingThreads.RemoveIfPresent(thread);
 
 	mAllThreads.erase(thread->mThreadState);
+
+	thread->Cleanup();
+	luaL_unref(mMainState, LUA_REGISTRYINDEX, threadRef);
 }
 
 void KEngineCore::LuaScheduler::Update() {
@@ -154,17 +155,23 @@ void KEngineCore::LuaScheduler::Update() {
 	{
 		mCurrentRunningThread = thread;
 		lua_State * threadState = thread->mThreadState;
-		int nstack = 0;  
-		int scriptResult = lua_resume(threadState, nullptr, thread->mReturnValues, &nstack);
-		thread->mReturnValues = 0;
+		int yieldedValues;
+		int scriptResult = lua_resume(threadState, nullptr, thread->mValues, &yieldedValues);
 		if (scriptResult != LUA_YIELD) {
 			deadThreads.push_back(thread);
-			if (scriptResult != 0) {
-				char const * string = lua_tostring(threadState, -1);
-				fprintf(stderr, "%s", string);
-				lua_pop(threadState, 1);
+			if (scriptResult != LUA_OK) {
+				char const* message = lua_tostring(threadState, -1);
+				luaL_traceback(mMainState, threadState, message, 1);
+
+				char const * traceback = lua_tostring(threadState, -1);
+				fprintf(stderr, "%s", traceback);
+				lua_pop(threadState, 2);
 				assert(0);
 			}
+		}
+		else
+		{
+			thread->mValues = yieldedValues;
 		}
 	}
 	mCurrentRunningThread = nullptr;
@@ -180,31 +187,40 @@ KEngineCore::ScheduledLuaThread * KEngineCore::LuaScheduler::GetScheduledThread(
 }
 
 static int create(lua_State * luaState) {
+	
 	KEngineCore::LuaScheduler * scheduler = (KEngineCore::LuaScheduler *)lua_touserdata(luaState, lua_upvalueindex(1));
-	KEngineCore::ScheduledLuaThread * scheduledThread = new (lua_newuserdata(luaState, sizeof(KEngineCore::ScheduledLuaThread))) KEngineCore::ScheduledLuaThread;
-	lua_checkstack(luaState, 1);
-	luaL_getmetatable(luaState, "KEngineCore.ScheduledThread");
-	lua_setmetatable(luaState, -2);
+	int numParams = lua_gettop(luaState);
+	KEngineCore::ScheduledLuaThread * scheduledThread = new (lua_newuserdata(luaState, sizeof(KEngineCore::ScheduledLuaThread))) KEngineCore::ScheduledLuaThread; //+1
 
-	lua_State* thread = lua_newthread(luaState);
-	if (lua_type(luaState, 1) == LUA_TSTRING) {
-		char const * fileName = lua_tostring(luaState, 1); 
-	    KEngineCore::TextFile file;
-        file.LoadFromFile(fileName, ".lua");
-		int val = luaL_loadbuffer(luaState, file.GetContents().c_str(), file.GetContents().length(), fileName); //TODO: Check return value
+	lua_checkstack(luaState, 1);
+	luaL_getmetatable(luaState, "KEngineCore.ScheduledThread"); //+1
+	lua_setmetatable(luaState, -2); //-1
+
+	lua_State* thread = lua_newthread(luaState); //+1
+	if (lua_type(luaState, 1) == LUA_TSTRING) { 
+		char const* fileName = lua_tostring(luaState, 1);
+		scheduler->LoadScript(thread, fileName);  
 	} else {
 		luaL_checktype(luaState, 1, LUA_TFUNCTION);
 		lua_checkstack(luaState, 1);
 		lua_pushvalue(luaState, 1);
+		lua_checkstack(thread, 1);
+		lua_xmove(luaState, thread, 1);
 	}
 			
-	lua_checkstack(thread, 1); 
-	assert(lua_type(luaState, -1) == LUA_TFUNCTION);
-	lua_xmove(luaState, thread, 1); //move the function from the parent thread to the child
-	scheduledThread->Init(scheduler, thread);
+	lua_checkstack(thread, numParams); 
+
+	//Copy the parameters
+	for (int i = 2; i <= numParams; i++) //First parameter is the thread itself or more likely the script name, so params to forward start at 2
+	{
+		lua_pushvalue(luaState, i);
+	}
+	lua_xmove(luaState, thread, numParams - 1);
+
+	scheduledThread->Init(scheduler, thread, numParams - 1, true);
 
 	lua_pop(luaState, 1);  // Pop the raw thread, it has been copied to the registry.
-	return 1;
+	return 1; //Return the wrapped thread
 }
 
 static int resume(lua_State * luaState) {
@@ -271,7 +287,7 @@ KEngineCore::ScheduledLuaThread::ScheduledLuaThread()
 	mScheduler = nullptr;
 	mThreadState = nullptr;
 	mRegistryIndex = LUA_REFNIL;
-	mReturnValues = 0;
+	mValues = 0;
 }
 
 KEngineCore::ScheduledLuaThread::~ScheduledLuaThread()
@@ -279,15 +295,16 @@ KEngineCore::ScheduledLuaThread::~ScheduledLuaThread()
 	Deinit();
 }
 	
-void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, lua_State * thread, bool run)
+void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, lua_State * thread, int params, bool run)
 {
 	assert(mScheduler == nullptr);
 	mScheduler = scheduler;
 	mThreadState = thread;
+	mValues = params;
 	scheduler->ScheduleThread(this, run);
 }
 
-void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, std::string_view fileName, bool run)
+void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, std::string_view fileName, int params, bool run)
 {
 	lua_State * mainState = scheduler->GetMainState();
 	lua_State * thread = lua_newthread(mainState);
@@ -321,7 +338,7 @@ void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, std::string
 	std::string fileNameCopy(fileName);
 
 	scheduler->LoadScript(thread, fileNameCopy.c_str());
-	Init(scheduler, thread, run);
+	Init(scheduler, thread, params, run);
 }
 
 void KEngineCore::ScheduledLuaThread::Deinit()
@@ -339,10 +356,10 @@ void KEngineCore::ScheduledLuaThread::Pause()
 	mScheduler->PauseThread(this);
 }
 
-void KEngineCore::ScheduledLuaThread::Resume(int returnValues)
+void KEngineCore::ScheduledLuaThread::Resume(int paramCount)
 {
 	assert(mScheduler != nullptr);
-	mReturnValues = returnValues;
+	mValues = paramCount;
 	mScheduler->ResumeThread(this);
 }
 
@@ -367,6 +384,29 @@ lua_State * KEngineCore::ScheduledLuaThread::GetThreadState() const
 {
 	assert(mScheduler != nullptr);
 	return mThreadState;
+}
+
+void KEngineCore::ScheduledLuaThread::SetCleanupCallback(std::function<void()> callback)
+{
+	assert(mCleanupCallback == nullptr); //No reason to have two cleanup callbacks at this time, so if there is one already you've made an error.
+	mCleanupCallback = callback;
+}
+
+void KEngineCore::ScheduledLuaThread::ClearCleanupCallback()
+{
+	mCleanupCallback = nullptr;
+}
+
+void KEngineCore::ScheduledLuaThread::Cleanup()
+{
+	if (mCleanupCallback)
+	{
+		mCleanupCallback();
+		mCleanupCallback = nullptr;
+	}
+	SetRegistryIndex(LUA_REFNIL);
+	mThreadState = nullptr; 
+	mScheduler = nullptr;
 }
 
 KEngineCore::LuaScheduler * KEngineCore::ScheduledLuaThread::GetLuaScheduler() const
