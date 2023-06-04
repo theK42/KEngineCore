@@ -1,6 +1,3 @@
-[submodule "boost-cmake"]
-	path = boost-cmake
-	url = git@github.com:Orphis/boost-cmake.git
 [submodule "lua-cmake"]
 	path = lua-cmake
 url=git@github.com:Dantsz/lua-cmake.git

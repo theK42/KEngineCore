@@ -1,5 +1,4 @@
 #pragma once
-#include "boost/noncopyable.hpp"
 
 namespace KEngineCore
 {
@@ -8,10 +7,11 @@ namespace KEngineCore
 	///------------------------------------------------------------------------
 
 	template< typename T, int N >
-	class ListElement : public boost::noncopyable
+	class ListElement
 	{
 	public:
-
+		ListElement(const ListElement&) = delete;
+		ListElement& operator=(const ListElement&) = delete;
 		ListElement() {
 			for (int i = 0; i < N; i++)
 			{
@@ -32,7 +32,6 @@ namespace KEngineCore
 		void	SetPrev(ListElement* prev);
 
 	private:
-		ListElement(const ListElement&) {}
 
 		ListElement* mNext[N];
 		ListElement* mPrev[N];
@@ -74,9 +73,11 @@ namespace KEngineCore
 	///------------------------------------------------------------------------
 
 	template< typename T, int M, int N>
-	class List : public boost::noncopyable
+	class List
 	{
 	public:
+		List(const List&) = delete;
+		List& operator=(const List&) = delete;
 		List();
 
 		void		Clear();

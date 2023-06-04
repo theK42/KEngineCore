@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <string_view>
+#include "compile_time_crc.hpp"
 
 namespace KEngineCore {
 struct StringHash
@@ -21,12 +22,10 @@ struct StringHash
 
 }
 #ifndef DELETE_STRINGS
-#define HASH(string, hash) (KEngineCore::StringHash(string, hash))
+#define HASH(string, hash) (KEngineCore::StringHash(string, CRC32_STR(string)))
 #else
-#define HASH(string, hash) (KEngineCore::StringHash(nullptr, hash))
+#define HASH(string, hash) (KEngineCore::StringHash(nullptr, CRC32_STR(string)))
 #endif
-
-#define HASH_CONST(string, hash) hash
 
 namespace std
 {

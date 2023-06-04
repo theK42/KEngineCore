@@ -1,5 +1,4 @@
 #include "StringHash.h"
-#include "boost/crc.hpp"
 #include <assert.h>
 #include <string>
 #include <cstring>
@@ -23,9 +22,7 @@ KEngineCore::StringHash::StringHash(StringHash const & other)
 KEngineCore::StringHash::StringHash(std::string_view inString, unsigned int inHash)
 {
 #ifndef DELETE_STRINGS
-	boost::crc_32_type crcCalculator;
-	crcCalculator.process_bytes(inString.data(), inString.length());
-	assert(crcCalculator.checksum() == inHash);
+	assert(crcdetail::compute(inString.data(), inString.length()) == inHash);
 	string = inString;
 #endif
 	hash = inHash;
@@ -34,9 +31,7 @@ KEngineCore::StringHash::StringHash(std::string_view inString, unsigned int inHa
 KEngineCore::StringHash::StringHash(std::string_view inString, unsigned int inHash, int inTableIndex)
 {
 #ifndef DELETE_STRINGS
-	boost::crc_32_type crcCalculator;
-	crcCalculator.process_bytes(inString.data(), inString.length());
-	assert(crcCalculator.checksum() == inHash);
+	assert(crcdetail::compute(inString.data(), inString.length()) == inHash);
 	string = inString;
 	tableIndex = inTableIndex;
 #endif
@@ -48,9 +43,7 @@ KEngineCore::StringHash::StringHash(std::string_view inString)
 #ifndef DELETE_STRINGS
 	string = inString;
 #endif
-	boost::crc_32_type crcCalculator;
-	crcCalculator.process_bytes(inString.data(), inString.length());
-	hash = crcCalculator.checksum();
+	hash = crcdetail::compute(inString.data(), inString.length());
 }
 
 KEngineCore::StringHash::StringHash(const char* c_string)
@@ -59,8 +52,6 @@ KEngineCore::StringHash::StringHash(const char* c_string)
 #ifndef DELETE_STRINGS
 	string = inString;
 #endif
-	boost::crc_32_type crcCalculator;
-	crcCalculator.process_bytes(inString.data(), inString.length());
-	hash = crcCalculator.checksum();
+	hash = crcdetail::compute(inString.data(), inString.length());
 }
 
