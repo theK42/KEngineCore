@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <string>
 #include <format>
+#include "fmt/format.h"
 
 namespace KEngineCore {
 
@@ -51,12 +52,21 @@ public:
 #define LuaAssert(luaState, expression, message, ...) ((void)0)
 #else
 
-#define LuaAssert(luaState, expression, message, ...)											\
-			if (!expression)																	\
-			{																					\
-				std::string formattedMessage = std::format(message, __VA_ARGS__);				\
-				luaL_error(luaState, "%s\n", formattedMessage.c_str());							\
-			}																					
+    #ifdef __cpp_lib_format
+        #define LuaAssert(luaState, expression, message, ...)								    \
+            if (!expression)																	\
+            {																					\
+                std::string formattedMessage = std::format(message __VA_OPT__(,) __VA_ARGS__);  \
+                luaL_error(luaState, "%s\n", formattedMessage.c_str());							\
+            }
+    #else
+        #define LuaAssert(luaState, expression, message, ...)                                   \
+            if (!expression)                                                                    \
+            {                                                                                   \
+                std::string formattedMessage = fmt::format(message __VA_OPT__(,) __VA_ARGS__);  \
+                luaL_error(luaState, "%s\n", formattedMessage.c_str());                         \
+            }
+    #endif
 #endif
 
 template <class T>
