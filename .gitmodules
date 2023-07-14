@@ -1,6 +1,6 @@
 [submodule "lua-cmake"]
 	path = lua-cmake
-url=git@github.com:Dantsz/lua-cmake.git
+url=git@github.com:theK42/lua-cmake.git
 [submodule "fmt"]
 	path = fmt
 	url = git@github.com:fmtlib/fmt.git
