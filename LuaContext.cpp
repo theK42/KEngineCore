@@ -70,6 +70,16 @@ void KEngineCore::LuaContext::AddContextualObject(const char* name, void* thingy
 	lua_pop(luaState, 1);
 }
 
+void KEngineCore::LuaContext::AddContextualData(const char* name, int value)
+{
+    lua_State* luaState = mScheduler->GetMainState();
+    PushToLua(luaState);
+    lua_pushstring(luaState, name);
+    lua_pushnumber(luaState, value);
+    lua_settable(luaState, -3);
+    lua_pop(luaState, 1);
+}
+
 void KEngineCore::LuaContext::PushToLua(lua_State* luaState)
 {
 	assert(mScheduler != nullptr);

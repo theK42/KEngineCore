@@ -21,6 +21,7 @@ namespace KEngineCore {
 
 		void RunScript(const std::string_view&, ScheduledLuaThread * thread);
 		void AddContextualObject(const char* name, void* thingy);
+        void AddContextualData(const char* name, int value);
 		void PushToLua(lua_State* luaState);
 		LuaScheduler* GetLuaScheduler() const;
 
