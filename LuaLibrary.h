@@ -6,7 +6,9 @@
 #include <assert.h>
 #include <string>
 #include <format>
+#ifndef __cpp_lib_format
 #include "fmt/format.h"
+#endif
 
 namespace KEngineCore {
 
