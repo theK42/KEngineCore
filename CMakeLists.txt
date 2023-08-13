@@ -40,13 +40,19 @@ target_compile_features(KEngineCore PUBLIC cxx_std_20)
 
 # Clang doesn't support std::format so we pull in the fmt library
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-add_subdirectory(fmt)
+    add_subdirectory(fmt)
+    target_link_libraries(KEngineCore PUBLIC fmt)
+endif()
+
+if (MSVC)
+    add_compile_options(/Zc:preprocessor)
 endif()
 
 target_include_directories(KEngineCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(lua-cmake)
-target_link_libraries(KEngineCore PUBLIC lua::header fmt)
+
+target_link_libraries(KEngineCore PUBLIC lua::header)
 target_link_libraries(KEngineCore PRIVATE lua::lib)
 
 option(KENGINE_CORE_DELETE_STRINGS_RELEASE "Delete strings from hashes in release builds" ON)
