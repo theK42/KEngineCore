@@ -12,6 +12,7 @@ struct lua_State;
 
 namespace KEngineCore {
 
+class Logger;
 class ScheduledLuaThread;
 
 
@@ -27,7 +28,7 @@ public:
 	LuaScheduler(void);
 	virtual ~LuaScheduler(void);
 
-	void Init();
+	void Init(Logger * logger);
 	void Deinit();
 
 	void Update();
@@ -56,6 +57,7 @@ private:
 	std::map<lua_State *, ScheduledLuaThread *>	mAllThreads;
 	int											mScriptTableRegistryIndex;
 	ScheduledLuaThread *						mCurrentRunningThread;
+    Logger *                                    mLogger;
 	friend class ScheduledLuaThread;
 };
 

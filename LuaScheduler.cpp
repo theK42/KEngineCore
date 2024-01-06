@@ -1,5 +1,6 @@
 #include "LuaScheduler.h"
 #include "Lua.hpp"
+#include "Logger.h"
 #include "TextFile.h"
 #include <vector>
 
@@ -15,10 +16,14 @@ KEngineCore::LuaScheduler::~LuaScheduler(void)
 	Deinit();
 }
 
-void KEngineCore::LuaScheduler::Init() {
+void KEngineCore::LuaScheduler::Init(Logger * logger) {
 	assert(!mMainState);
+    mLogger = logger;
 	mMainState = luaL_newstate();
 	luaL_openlibs(mMainState);
+    //replace print with print-to-logger
+    logger->ReplaceLuaPrint(mMainState);
+    
 	RegisterLibrary(mMainState);
 
 	//Create a weak table for script loading
@@ -78,19 +83,19 @@ void KEngineCore::LuaScheduler::LoadScript(lua_State * thread, char const * scri
 		switch (val) {
 		case LUA_ERRSYNTAX: ///syntax error during pre-compilation;			
 			string = lua_tostring(mMainState, -1);
-			fprintf(stderr, "Syntax Error: %s\n", string);
+            mLogger->LogError("Syntax Error: {}", string);
 			lua_pop(mMainState, 1);
 			assert(0);
 			break;
 		case LUA_ERRMEM: //memory allocation error.
 			string = lua_tostring(mMainState, -1);
-			fprintf(stderr, "Memory Error: %s\n", string);
+            mLogger->LogError("Memory Error: {}", string);
 			lua_pop(mMainState, 1);
 			assert(0);
 			break;
 		case LUA_ERRFILE: //Couldn't load file
 			string = lua_tostring(mMainState, -1);
-			fprintf(stderr, "File Load Error: %s\n", string);
+            mLogger->LogError("File Load Error: {}", string);
 			lua_pop(mMainState, 1);
 			assert(0);
 			break;
@@ -164,7 +169,7 @@ void KEngineCore::LuaScheduler::Update() {
 				luaL_traceback(mMainState, threadState, message, 1);
 
 				char const * traceback = lua_tostring(threadState, -1);
-				fprintf(stderr, "%s", traceback);
+                mLogger->LogError("{}", traceback);
 				lua_pop(threadState, 2);
 				assert(0);
 			}
@@ -308,34 +313,8 @@ void KEngineCore::ScheduledLuaThread::Init(LuaScheduler * scheduler, std::string
 {
 	lua_State * mainState = scheduler->GetMainState();
 	lua_State * thread = lua_newthread(mainState);
-    
-    /*KEngineCore::TextFile file;
-    file.LoadFromFile(fileName, ".lua");
-    int val = luaL_loadbuffer(thread, file.GetContents().c_str(), file.GetContents().length(), fileName); //TODO: Check return value
-	char const * string;
-	switch (val) {
-		case LUA_ERRSYNTAX: ///syntax error during pre-compilation;
-			
-				string = lua_tostring(thread, -1);
-				fprintf(stderr, "Syntax Error: %s", string);
-				lua_pop(thread, 1);
-				assert(0);
-		break;
-		case LUA_ERRMEM: //memory allocation error.
-						string = lua_tostring(thread, -1);
-				fprintf(stderr, "Memory Error: %s", string);
-				lua_pop(thread, 1);
-				assert(0);
-		break;
-		case LUA_ERRFILE: //Couldn't load file
-						string = lua_tostring(thread, -1);
-				fprintf(stderr, "File Load Error: %s", string);
-				lua_pop(thread, 1);
-				assert(0);
-		break;
-	}*/
 
-	std::string fileNameCopy(fileName);
+    std::string fileNameCopy(fileName);
 
 	scheduler->LoadScript(thread, fileNameCopy.c_str());
 	Init(scheduler, thread, params, run);

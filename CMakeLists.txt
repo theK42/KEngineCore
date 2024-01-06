@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
+set(CMAKE_CXX_STANDARD 20)
+
 #set the project name
 project(KEngineCore)
 
@@ -9,6 +11,8 @@ BinaryFile.cpp
 Disposable.h
 Disposable.cpp
 List.h
+Logger.h
+Logger.cpp
 LuaContext.h
 LuaContext.cpp
 LuaLibrary.h
@@ -36,7 +40,7 @@ Tweening.cpp
 compile_time_crc.hpp
 )
 
-target_compile_features(KEngineCore PUBLIC cxx_std_20) 
+target_compile_features(KEngineCore PUBLIC cxx_std_20)
 
 # Clang doesn't support std::format so we pull in the fmt library
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
