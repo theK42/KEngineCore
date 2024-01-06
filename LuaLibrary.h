@@ -5,9 +5,11 @@
 #include <functional>
 #include <assert.h>
 #include <string>
-#include <format>
-#ifndef __cpp_lib_format
+
+#ifndef __cpp_lib_format //Clang doesn't support this, Android doesn't even have the header
 #include "fmt/format.h"
+#else
+#include <format>
 #endif
 
 namespace KEngineCore {
