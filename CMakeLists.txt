@@ -42,11 +42,11 @@ compile_time_crc.hpp
 
 target_compile_features(KEngineCore PUBLIC cxx_std_20)
 
-# Clang doesn't support std::format so we pull in the fmt library
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+# Clang doesn't support std::format so we pull in the fmt library.  Also there are some issues with the C++ 20 version of the format library so we're just going to use fmt al the time for now
+#if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_subdirectory(fmt)
-    target_link_libraries(KEngineCore PUBLIC fmt)
-endif()
+    target_link_libraries(KEngineCore PUBLIC fmt-header-only)
+#endif()
 
 if (MSVC)
     add_compile_options(/Zc:preprocessor)

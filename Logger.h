@@ -12,6 +12,7 @@
 #include "Lua.hpp"
 #include <vector>
 #include <string_view>
+#include <functional>
 
 namespace KEngineCore {
     class Logger
